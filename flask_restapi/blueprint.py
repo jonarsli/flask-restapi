@@ -1,12 +1,12 @@
 from flask import Blueprint, render_template
 
-from .spec import Spec
+from .spec import spec
 
 restapi_bp = Blueprint("restapi", __name__, template_folder="templates")
 
 
 def get_spec():
-    return Spec.spec_model.dict(exclude_none=True)
+    return spec.spec_model.dict(exclude_none=True)
 
 
 def get_swagger_docs():

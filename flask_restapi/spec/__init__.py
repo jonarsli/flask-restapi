@@ -29,13 +29,12 @@ class SpecModel(BaseModel):
 
 
 class Spec:
-    spec_model = SpecModel(paths={})
-
     def __init__(self) -> None:
         self.url_maps: List[UrlMapModel] = []
         self.endpoint_maps: List[EndPointMap] = []
         self.components = SpecComponents(schemas={})
         self.tags: List[TagModel] = []
+        self.spec_model = SpecModel(paths={})
 
     def store_parameters(
         self,
@@ -166,3 +165,6 @@ class Spec:
                 ),
             )
             self.endpoint_maps.append(endpoint_map)
+
+
+spec = Spec()
