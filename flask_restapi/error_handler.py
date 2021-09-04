@@ -5,7 +5,7 @@ from werkzeug.exceptions import HTTPException
 from .response import ErrorResponse
 
 
-class ErrorHandler:
+class ErrorHandlerMixin:
     def __init__(self) -> None:
         self._response = ErrorResponse()
 

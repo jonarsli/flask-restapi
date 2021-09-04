@@ -46,6 +46,11 @@ class EndPointModel(BaseModel):
     tags: Optional[List[str]]
 
 
+class BlueprintMap(BaseModel):
+    endpoint_name: str
+    blueprint_name: Optional[str]
+
+
 class EndPointMap(BaseModel):
     endpoint_name: str
     method_name: Optional[str]

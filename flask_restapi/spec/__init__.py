@@ -11,6 +11,7 @@ from .common import (
     TagModel,
 )
 from .path import (  # noqa: F401
+    BlueprintMap,
     EndPointMap,
     EndPointModel,
     ParameterModel,
@@ -31,6 +32,7 @@ class SpecModel(BaseModel):
 class Spec:
     def __init__(self) -> None:
         self.url_maps: List[UrlMapModel] = []
+        self.blueprint_maps: List[BlueprintMap] = []
         self.endpoint_maps: List[EndPointMap] = []
         self.components = SpecComponents(schemas={})
         self.tags: List[TagModel] = []

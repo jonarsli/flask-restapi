@@ -7,10 +7,10 @@ from pydantic.generics import GenericModel
 
 from flask_restapi.spec.common import InfoModel
 
-from .blueprint import get_spec, get_swagger_docs, restapi_bp
-from .error_handler import ErrorHandler
+from .error_handler import ErrorHandlerMixin
 from .response import JSONResponse
-from .spec import SpecPath, TagModel, UrlMapModel, spec
+from .spec import BlueprintMap, SpecPath, TagModel, UrlMapModel, spec
+from .view import get_spec, get_swagger_docs, restapi_bp
 
 DataT = TypeVar("DataT")
 
@@ -21,7 +21,7 @@ class RequestParameters(GenericModel, Generic[DataT]):
     body: Optional[DataT]
 
 
-class Api(ErrorHandler):
+class Api(ErrorHandlerMixin):
     def __init__(self, app: Flask = None, response_to_json: bool = True) -> None:
         super().__init__()
         self._response_to_json = response_to_json
@@ -40,18 +40,27 @@ class Api(ErrorHandler):
         self._register_blueprint()
         self.register_error_handlers()
 
+    def bp_map(self, blueprint_name: str = None, endpoint_name: str = None):
+        def decorator(cls):
+            blueprint_map = BlueprintMap(
+                endpoint_name=endpoint_name or cls.__name__.lower(),
+                blueprint_name=blueprint_name,
+            )
+            self.spec.blueprint_maps.append(blueprint_map)
+
+            return cls
+
+        return decorator
+
     def path(
         self,
         schema: Type[BaseModel],
         endpoint: str = None,
-        blueprint_name: str = None,
         tag: Type[TagModel] = None,
     ):
         def decorator(func):
-            new_endpoint = self._generate_endpoint(
-                endpoint or func.__qualname__, blueprint_name
-            )
-            self.spec.store_parameters("path", schema, new_endpoint, func.__name__, tag)
+            ep = endpoint if endpoint else self._generate_endpoint(func.__qualname__)
+            self.spec.store_parameters("path", schema, ep, func.__name__, tag)
 
             @functools.wraps(func)
             def wrapper(*args, **kwargs):
@@ -67,16 +76,11 @@ class Api(ErrorHandler):
         self,
         schema: Type[BaseModel],
         endpoint: str = None,
-        blueprint_name: str = None,
         tag: Type[TagModel] = None,
     ):
         def decorator(func):
-            new_endpoint = self._generate_endpoint(
-                endpoint or func.__qualname__, blueprint_name
-            )
-            self.spec.store_parameters(
-                "query", schema, new_endpoint, func.__name__, tag
-            )
+            ep = endpoint if endpoint else self._generate_endpoint(func.__qualname__)
+            self.spec.store_parameters("query", schema, ep, func.__name__, tag)
 
             @functools.wraps(func)
             def wrapper(*args, **kwargs):
@@ -92,15 +96,12 @@ class Api(ErrorHandler):
         self,
         schema: Type[BaseModel],
         endpoint: str = None,
-        blueprint_name: str = None,
         content_type: list = ["application/json"],
         tag: Type[TagModel] = None,
     ):
         def decorator(func):
-            new_endpoint = self._generate_endpoint(
-                endpoint or func.__qualname__, blueprint_name
-            )
-            self.spec.store_body(schema, new_endpoint, func.__name__, content_type, tag)
+            ep = endpoint if endpoint else self._generate_endpoint(func.__qualname__)
+            self.spec.store_body(schema, ep, func.__name__, content_type, tag)
 
             @functools.wraps(func)
             def wrapper(*args, **kwargs):
@@ -117,17 +118,12 @@ class Api(ErrorHandler):
         self,
         schema: Type[BaseModel],
         endpoint: str = None,
-        blueprint_name: str = None,
         content_type: list = ["application/json"],
         code: int = 200,
     ):
         def decorator(func):
-            new_endpoint = self._generate_endpoint(
-                endpoint or func.__qualname__, blueprint_name
-            )
-            self.spec.store_responses(
-                code, schema, new_endpoint, func.__name__, content_type
-            )
+            ep = endpoint if endpoint else self._generate_endpoint(func.__qualname__)
+            self.spec.store_responses(code, schema, ep, func.__name__, content_type)
 
             @functools.wraps(func)
             def wrapper(*args, **kwargs):
@@ -150,21 +146,23 @@ class Api(ErrorHandler):
 
         return request.parameters
 
-    def _generate_endpoint(self, endpoint: str, blurprint_name: str) -> str:
-        if endpoint:
-            endpoint = endpoint.split(".")[0]
-            endpoint = endpoint.lower()
-
-        if blurprint_name:
-            return f"{blurprint_name}.{endpoint}"
-
-        return endpoint
+    def _generate_endpoint(self, endpoint: str) -> str:
+        return endpoint.split(".")[0].lower()
 
     def _register_spec(self) -> None:
         for url_map in self.app.url_map.iter_rules():
             self.spec.url_maps.append(
                 UrlMapModel(url=url_map.rule, endpoint=url_map.endpoint)
             )
+
+        for blueprint_map in self.spec.blueprint_maps:
+            for index, endpoint_map in enumerate(self.spec.endpoint_maps):
+                if endpoint_map.endpoint_name == blueprint_map.endpoint_name:
+                    self.spec.endpoint_maps[
+                        index
+                    ].endpoint_name = (
+                        f"{blueprint_map.blueprint_name}.{endpoint_map.endpoint_name}"
+                    )
 
         for url_map in self.spec.url_maps:
             for endpoint_map in self.spec.endpoint_maps:
