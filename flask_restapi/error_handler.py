@@ -1,7 +1,6 @@
-from flask import json
 from pydantic import ValidationError
-from werkzeug.exceptions import HTTPException
 
+from .exception import ApiException, ApiExceptionModel
 from .response import ErrorResponse
 
 
@@ -10,19 +9,25 @@ class ErrorHandlerMixin:
         self._response = ErrorResponse()
 
     def register_error_handlers(self) -> None:
-        self.app.register_error_handler(HTTPException, self._handle_http_exception)
+        self.app.register_error_handler(ApiException, self._handle_api_exception)
         self.app.register_error_handler(ValidationError, self._handle_validation_error)
 
     def _handle_validation_error(self, error: ValidationError) -> ErrorResponse:
-        self._response.status = 400
-        self._response.data = json.dumps(
-            {"code": 400, "status": "Validation error", "description": str(error)}
-        )
+        self._response.status = 422
+        self._response.data = ApiExceptionModel(
+            http_code=422,
+            description=str(error),
+            error_code=422,
+            error_name="Validation error",
+        ).json()
         return self._response
 
-    def _handle_http_exception(self, error: HTTPException) -> ErrorResponse:
-        self._response.status = error.code
-        self._response.data = json.dumps(
-            {"code": error.code, "name": error.name, "description": error.description}
-        )
+    def _handle_api_exception(self, error: ApiException) -> ErrorResponse:
+        self._response.status = error.http_code
+        self._response.data = ApiExceptionModel(
+            http_code=error.http_code,
+            description=error.description,
+            error_code=error.error_code or error.http_code,
+            error_name=error.error_name or "",
+        ).json()
         return self._response
