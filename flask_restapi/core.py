@@ -5,11 +5,9 @@ from flask import Flask, current_app, request
 from pydantic import BaseModel
 from pydantic.generics import GenericModel
 
-from flask_restapi.spec.common import InfoModel
-
 from .error_handler import ErrorHandlerMixin
 from .response import JSONResponse
-from .spec import BlueprintMap, SpecPath, TagModel, UrlMapModel, spec
+from .spec import BlueprintMap, InfoModel, SpecPath, TagModel, UrlMapModel, spec
 from .view import get_spec, get_swagger_docs, restapi_bp
 
 DataT = TypeVar("DataT")
@@ -19,6 +17,7 @@ class RequestParameters(GenericModel, Generic[DataT]):
     path: Optional[DataT]
     query: Optional[DataT]
     body: Optional[DataT]
+    token: Optional[str]
 
 
 class Api(ErrorHandlerMixin):
@@ -114,6 +113,24 @@ class Api(ErrorHandlerMixin):
 
         return decorator
 
+    def auth(self, endpoint: str = None):
+        def decorator(func):
+            ep = endpoint if endpoint else self._generate_endpoint(func.__qualname__)
+            self.spec.store_auth(ep, func.__name__)
+
+            @functools.wraps(func)
+            def wrapper(*args, **kwargs):
+                request.parameters = self._get_request_parameters()
+                auth_header = request.headers.get("Authorization")
+                if " " in auth_header:
+                    request.parameters.token = auth_header.split(" ")[1]
+
+                return func(self, request.parameters)
+
+            return wrapper
+
+        return decorator
+
     def response(
         self,
         schema: Type[BaseModel],
@@ -127,7 +144,7 @@ class Api(ErrorHandlerMixin):
 
             @functools.wraps(func)
             def wrapper(*args, **kwargs):
-                return func(*args, **kwargs)
+                return func(self, request.parameters)
 
             return wrapper
 
@@ -139,6 +156,7 @@ class Api(ErrorHandlerMixin):
         self.app.config.setdefault("API_VERSION", "0.1.0")
         self.app.config.setdefault("SPEC_URL", "/api/spec.json")
         self.app.config.setdefault("SWAGGER_UI_URL", "/docs")
+        self.app.config.setdefault("RESTAPI_SECRET_KEY", "FlaskRESTAPIKey")
 
     def _get_request_parameters(self) -> RequestParameters:
         if not hasattr(request, "parameters"):

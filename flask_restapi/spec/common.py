@@ -16,6 +16,7 @@ class TagModel(BaseModel):
 
 class SpecComponents(BaseModel):
     schemas: Optional[Dict[str, Any]]
+    securitySchemes: Optional[Dict[str, Any]]
 
 
 class InfoModel(BaseModel):

@@ -84,6 +84,18 @@ class Spec:
             endpoint_name, method_name, request_body=request_body, tag=tag
         )
 
+    def store_auth(self, endpoint_name: str, method_name: str) -> None:
+        if not self.components.securitySchemes:
+            self.components.securitySchemes = {
+                "bearerAuth": {
+                    "type": "http",
+                    "scheme": "bearer",
+                    "bearerFormat": "JWT",
+                }
+            }
+        security = [{"bearerAuth": []}]
+        self._inject_endpoint(endpoint_name, method_name, security=security)
+
     def store_responses(
         self,
         code: int,
@@ -128,6 +140,7 @@ class Spec:
         request_body: RequestBodyModel = None,
         responses: Dict[str, Any] = None,
         tag: TagModel = None,
+        security: List[dict] = None,
     ):
         for index, em in enumerate(self.endpoint_maps):
             if endpoint_name == em.endpoint_name and method_name == em.method_name:
@@ -153,6 +166,9 @@ class Spec:
                     if tag.name not in em.model.tags:
                         em.model.tags.append(tag.name)
 
+                if isinstance(security, list):
+                    em.model.security = security
+
                 self.endpoint_maps[index] = em
                 break
         else:
@@ -164,6 +180,7 @@ class Spec:
                     request_body=request_body,
                     responses=responses,
                     tags=tag,
+                    security=security,
                 ),
             )
             self.endpoint_maps.append(endpoint_map)

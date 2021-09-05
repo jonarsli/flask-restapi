@@ -1,5 +1,5 @@
 import re
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field, validator
 
@@ -44,6 +44,7 @@ class EndPointModel(BaseModel):
     requestBody: Optional[RequestBodyModel]
     responses: Optional[Dict[str, CommonContent]]
     tags: Optional[List[str]]
+    security: Optional[List[Dict[str, Any]]]
 
 
 class BlueprintMap(BaseModel):
