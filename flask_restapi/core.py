@@ -156,7 +156,6 @@ class Api(ErrorHandlerMixin):
         self.app.config.setdefault("API_VERSION", "0.1.0")
         self.app.config.setdefault("SPEC_URL", "/api/spec.json")
         self.app.config.setdefault("SWAGGER_UI_URL", "/docs")
-        self.app.config.setdefault("RESTAPI_SECRET_KEY", "FlaskRESTAPIKey")
 
     def _get_request_parameters(self) -> RequestParameters:
         if not hasattr(request, "parameters"):
