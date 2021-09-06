@@ -146,6 +146,7 @@ class Api(SpecMixin, AuthTokenMixin, ErrorHandlerMixin):
 
             @functools.wraps(func)
             def wrapper(*args, **kwargs):
+                request.parameters = self._get_request_parameters()
                 return func(self, request.parameters)
 
             return wrapper
