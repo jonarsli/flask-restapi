@@ -2,13 +2,14 @@ import functools
 from typing import Any, Generic, Optional, Type, TypeVar
 
 from flask import Flask, current_app, request
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from pydantic.generics import GenericModel
 
 from .error_handler import ErrorHandlerMixin
 from .response import JSONResponse
 from .spec import BlueprintMap, InfoModel, SpecPath, TagModel, UrlMapModel, spec
 from .view import get_spec, get_swagger_docs, restapi_bp
+from .auth import AuthTokenMixin
 
 DataT = TypeVar("DataT")
 
@@ -20,10 +21,10 @@ class RequestParameters(GenericModel, Generic[DataT]):
     token: Optional[str]
 
 
-class Api(ErrorHandlerMixin):
-    def __init__(self, app: Flask = None, response_to_json: bool = True) -> None:
-        super().__init__()
-        self._response_to_json = response_to_json
+class Api(AuthTokenMixin, ErrorHandlerMixin):
+    def __init__(self, app: Flask = None, algorithm: str = "HS256") -> None:
+        AuthTokenMixin.__init__(self, algorithm)
+        ErrorHandlerMixin.__init__(self)
         self.spec = spec
         self.app = app
         if app is not None:
@@ -31,8 +32,7 @@ class Api(ErrorHandlerMixin):
 
     def init_app(self, app: Flask) -> None:
         self.app = app
-        if self._response_to_json:
-            self.app.response_class = JSONResponse
+        self.app.response_class = JSONResponse
 
         self._init_config()
         self.app.before_first_request(self._register_spec)
@@ -122,8 +122,10 @@ class Api(ErrorHandlerMixin):
             def wrapper(*args, **kwargs):
                 request.parameters = self._get_request_parameters()
                 auth_header = request.headers.get("Authorization")
-                if " " in auth_header:
-                    request.parameters.token = auth_header.split(" ")[1]
+                if auth_header is not None:
+                    if "Bearer" in auth_header:
+                        _token = auth_header.split(" ")[1]
+                        request.parameters.token = _token
 
                 return func(self, request.parameters)
 
@@ -151,6 +153,7 @@ class Api(ErrorHandlerMixin):
         return decorator
 
     def _init_config(self):
+        AuthTokenMixin.init_config(self)
         self.app.config.setdefault("OPENAPI_VERSION", "3.0.2")
         self.app.config.setdefault("API_TITLE", "Flask RESTAPI")
         self.app.config.setdefault("API_VERSION", "0.1.0")
