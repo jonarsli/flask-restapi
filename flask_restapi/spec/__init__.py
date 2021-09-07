@@ -119,7 +119,8 @@ class Spec:
         self._inject_endpoint(endpoint_name, method_name, responses=responses)
 
     def _store_components(self, schema: Type[BaseModel]) -> None:
-        schema_dict = schema.schema()
+        schema_dict = schema.schema(ref_template="#/components/schemas/{model}")
+        schema_dict.pop("definitions", None)
         self.components.schemas.update({schema_dict["title"]: schema_dict})
 
     def _store_tags(self, tag: TagModel) -> None:

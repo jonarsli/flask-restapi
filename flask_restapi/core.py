@@ -153,6 +153,19 @@ class Api(SpecMixin, AuthTokenMixin, ErrorHandlerMixin):
 
         return decorator
 
+    def add_component_to_docs(self, schema: Type[BaseModel]):
+        def decorator(func):
+            self.spec._store_components(schema)
+
+            @functools.wraps(func)
+            def wrapper(*args, **kwargs):
+                request.parameters = self._get_request_parameters()
+                return func(self, request.parameters)
+
+            return wrapper
+
+        return decorator
+
     def _get_request_parameters(self) -> RequestParameters:
         if not hasattr(request, "parameters"):
             request.parameters = RequestParameters()
