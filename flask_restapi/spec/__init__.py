@@ -45,8 +45,10 @@ class Spec:
         endpoint_name: str,
         method_name: str,
         tag: TagModel = None,
+        summary: str = None,
     ) -> None:
         schema_dict = schema.schema()
+        description = schema_dict.get("description") or "No description"
         parameters: List[ParameterModel] = []
         for key, value in schema_dict["properties"].items():
             parameter = ParameterModel(
@@ -58,7 +60,12 @@ class Spec:
             parameters.append(parameter)
 
         self._inject_endpoint(
-            endpoint_name, method_name, parameters=parameters, tag=tag
+            endpoint_name,
+            method_name,
+            parameters=parameters,
+            tag=tag,
+            description=description,
+            summary=summary,
         )
 
     def store_body(
@@ -68,6 +75,7 @@ class Spec:
         method_name: str,
         content_type: list,
         tag: TagModel = None,
+        summary: str = None,
     ):
         self._store_components(schema)
         schema_dict = schema.schema()
@@ -81,7 +89,11 @@ class Spec:
         request_body = RequestBodyModel(description=description, content=content)
 
         self._inject_endpoint(
-            endpoint_name, method_name, request_body=request_body, tag=tag
+            endpoint_name,
+            method_name,
+            request_body=request_body,
+            tag=tag,
+            summary=summary,
         )
 
     def store_auth(self, endpoint_name: str, method_name: str) -> None:
@@ -142,6 +154,8 @@ class Spec:
         responses: Dict[str, Any] = None,
         tag: TagModel = None,
         security: List[dict] = None,
+        description: str = None,
+        summary: str = None,
     ):
         for index, em in enumerate(self.endpoint_maps):
             if endpoint_name == em.endpoint_name and method_name == em.method_name:
@@ -170,6 +184,12 @@ class Spec:
                 if isinstance(security, list):
                     em.model.security = security
 
+                if isinstance(description, str):
+                    em.model.description = description
+
+                if isinstance(summary, str):
+                    em.model.summary = summary
+
                 self.endpoint_maps[index] = em
                 break
         else:
@@ -182,6 +202,8 @@ class Spec:
                     responses=responses,
                     tags=tag,
                     security=security,
+                    description=description,
+                    summary=summary,
                 ),
             )
             self.endpoint_maps.append(endpoint_map)

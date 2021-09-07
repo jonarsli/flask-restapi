@@ -39,6 +39,7 @@ class RequestBodyModel(BaseModel):
 
 class EndPointModel(BaseModel):
     summary: Optional[str]
+    description: Optional[str]
     operationId: Optional[str]
     parameters: Optional[List[ParameterModel]]
     requestBody: Optional[RequestBodyModel]
