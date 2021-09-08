@@ -132,7 +132,10 @@ class Spec:
 
     def _store_components(self, schema: Type[BaseModel]) -> None:
         schema_dict = schema.schema(ref_template="#/components/schemas/{model}")
-        schema_dict.pop("definitions", None)
+        definitions = schema_dict.pop("definitions", None)
+        if definitions:
+            self.components.schemas.update(definitions)
+
         self.components.schemas.update({schema_dict["title"]: schema_dict})
 
     def _store_tags(self, tag: TagModel) -> None:
