@@ -15,7 +15,10 @@ class UrlMapModel(BaseModel):
         original_rules = re.findall("<.*?>", value)
         for rule in original_rules:
             rule_splits = rule.split(":")
-            converted_rule = "{" + rule_splits[1][:-1] + "}"
+            if len(rule_splits) == 2:
+                converted_rule = "{" + rule_splits[1][:-1] + "}"
+            else:
+                converted_rule = "{" + rule_splits[0][1:-1] + "}"
             value = value.replace(rule, converted_rule)
         return value
 
