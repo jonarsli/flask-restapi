@@ -55,13 +55,15 @@ class Api(SpecMixin, AuthTokenMixin, ErrorHandlerMixin):
         self,
         schema: Type[BaseModel],
         endpoint: str = None,
+        method_name: str = None,
         tag: Type[TagModel] = None,
         summary: str = None,
     ):
         def decorator(func):
             ep = endpoint if endpoint else self._generate_endpoint(func.__qualname__)
+            _method_name = method_name or func.__name__
             _summary = summary or func.__doc__ or None
-            self.spec.store_parameters("path", schema, ep, func.__name__, tag, _summary)
+            self.spec.store_parameters("path", schema, ep, _method_name, tag, _summary)
 
             @functools.wraps(func)
             def wrapper(*args, **kwargs):
@@ -77,15 +79,15 @@ class Api(SpecMixin, AuthTokenMixin, ErrorHandlerMixin):
         self,
         schema: Type[BaseModel],
         endpoint: str = None,
+        method_name: str = None,
         tag: Type[TagModel] = None,
         summary: str = None,
     ):
         def decorator(func):
             ep = endpoint if endpoint else self._generate_endpoint(func.__qualname__)
+            _method_name = method_name or func.__name__
             _summary = summary or func.__doc__ or None
-            self.spec.store_parameters(
-                "query", schema, ep, func.__name__, tag, _summary
-            )
+            self.spec.store_parameters("query", schema, ep, _method_name, tag, _summary)
 
             @functools.wraps(func)
             def wrapper(*args, **kwargs):
@@ -101,14 +103,16 @@ class Api(SpecMixin, AuthTokenMixin, ErrorHandlerMixin):
         self,
         schema: Type[BaseModel],
         endpoint: str = None,
+        method_name: str = None,
         content_type: list = ["application/json"],
         tag: Type[TagModel] = None,
         summary: str = None,
     ):
         def decorator(func):
             ep = endpoint if endpoint else self._generate_endpoint(func.__qualname__)
+            _method_name = method_name or func.__name__
             _summary = summary or func.__doc__ or None
-            self.spec.store_body(schema, ep, func.__name__, content_type, tag, _summary)
+            self.spec.store_body(schema, ep, _method_name, content_type, tag, _summary)
 
             @functools.wraps(func)
             def wrapper(*args, **kwargs):
@@ -121,10 +125,11 @@ class Api(SpecMixin, AuthTokenMixin, ErrorHandlerMixin):
 
         return decorator
 
-    def auth(self, endpoint: str = None):
+    def auth(self, endpoint: str = None, method_name: str = None):
         def decorator(func):
             ep = endpoint if endpoint else self._generate_endpoint(func.__qualname__)
-            self.spec.store_auth(ep, func.__name__)
+            _method_name = method_name or func.__name__
+            self.spec.store_auth(ep, _method_name)
 
             @functools.wraps(func)
             def wrapper(*args, **kwargs):
@@ -145,12 +150,14 @@ class Api(SpecMixin, AuthTokenMixin, ErrorHandlerMixin):
         self,
         schema: Type[BaseModel],
         endpoint: str = None,
+        method_name: str = None,
         content_type: list = ["application/json"],
         code: int = 200,
     ):
         def decorator(func):
             ep = endpoint if endpoint else self._generate_endpoint(func.__qualname__)
-            self.spec.store_responses(code, schema, ep, func.__name__, content_type)
+            _method_name = method_name or func.__name__
+            self.spec.store_responses(code, schema, ep, _method_name, content_type)
 
             @functools.wraps(func)
             def wrapper(*args, **kwargs):

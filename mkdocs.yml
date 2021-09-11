@@ -1,0 +1,13 @@
+site_name: Flask-RESTAPI
+repo_url: https://github.com/JonarsLi/flask-restapi
+repo_name: JonarsLi/flask-restapi
+nav:
+  - Overview: index.md
+  - Install: install.md
+theme:
+  name: "material"
+  icon:
+    repo: fontawesome/brands/github
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
