@@ -4,6 +4,11 @@ repo_name: JonarsLi/flask-restapi
 nav:
   - Overview: index.md
   - Install: install.md
+  - Quickstart: quickstart.md
+  - OpenAPI: openapi.md
+  - Decorators: decorators.md
+  - Blueprint: blueprint.md
+  - Function based view: function_based_view.md
 theme:
   name: "material"
   icon:
@@ -11,3 +16,6 @@ theme:
 markdown_extensions:
   - pymdownx.highlight
   - pymdownx.superfences
+  - pymdownx.critic
+  - admonition
+  - def_list
