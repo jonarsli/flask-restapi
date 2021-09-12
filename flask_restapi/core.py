@@ -4,6 +4,7 @@ from typing import Any, Generic, Optional, Type, TypeVar
 from flask import Flask, request
 from pydantic import BaseModel
 from pydantic.generics import GenericModel
+from werkzeug.datastructures import FileStorage
 
 from .mixin import AuthTokenMixin, ErrorHandlerMixin, SpecMixin
 from .response import JSONResponse
@@ -12,10 +13,27 @@ from .spec import BlueprintMap, TagModel
 DataT = TypeVar("DataT")
 
 
+class FileStorageType(bytes):
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, v):
+        if not isinstance(v, FileStorage):
+            raise TypeError("FileStorage required")
+        return v
+
+    def __repr__(self):
+        return f"FilesType({super().__repr__()})"
+
+
 class RequestParameters(GenericModel, Generic[DataT]):
     path: Optional[DataT]
     query: Optional[DataT]
     body: Optional[DataT]
+    header: Optional[DataT]
+    form: Optional[DataT]
     token: Optional[str]
 
 
@@ -48,6 +66,33 @@ class Api(SpecMixin, AuthTokenMixin, ErrorHandlerMixin):
             self.spec.blueprint_maps.append(blueprint_map)
 
             return cls
+
+        return decorator
+
+    def header(
+        self,
+        schema: Type[BaseModel],
+        endpoint: str = None,
+        method_name: str = None,
+        tag: Type[TagModel] = None,
+        summary: str = None,
+    ):
+        def decorator(func):
+            ep = endpoint if endpoint else self._generate_endpoint(func.__qualname__)
+            _method_name = method_name or func.__name__
+            _summary = summary or func.__doc__ or None
+            self.spec.store_parameters(
+                "header", schema, ep, _method_name, tag, _summary
+            )
+
+            @functools.wraps(func)
+            def wrapper(*args, **kwargs):
+                request.parameters = self._get_request_parameters()
+                _headers = dict((k.lower(), v) for k, v in request.headers.items())
+                request.parameters.header = schema(**_headers)
+                return func(self, request.parameters)
+
+            return wrapper
 
         return decorator
 
@@ -119,6 +164,38 @@ class Api(SpecMixin, AuthTokenMixin, ErrorHandlerMixin):
                 request.parameters = self._get_request_parameters()
                 body: Any = request.get_json()
                 request.parameters.body = schema(**body)
+                return func(self, request.parameters)
+
+            return wrapper
+
+        return decorator
+
+    def form(
+        self,
+        schema: Type[BaseModel],
+        endpoint: str = None,
+        method_name: str = None,
+        content_type: list = ["multipart/form-data"],
+        tag: Type[TagModel] = None,
+        summary: str = None,
+    ):
+        def decorator(func):
+            ep = endpoint if endpoint else self._generate_endpoint(func.__qualname__)
+            _method_name = method_name or func.__name__
+            _summary = summary or func.__doc__ or None
+            self.spec.store_body(schema, ep, _method_name, content_type, tag, _summary)
+
+            @functools.wraps(func)
+            def wrapper(*args, **kwargs):
+                request.parameters = self._get_request_parameters()
+                _form = {}
+                if request.files.to_dict():
+                    _form.update(request.files.to_dict())
+
+                if request.form.to_dict():
+                    _form.update(request.form.to_dict())
+
+                request.parameters.form = schema(**_form)
                 return func(self, request.parameters)
 
             return wrapper
