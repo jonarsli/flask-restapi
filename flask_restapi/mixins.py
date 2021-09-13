@@ -2,13 +2,13 @@ from datetime import datetime, timedelta
 from typing import Any, Dict
 
 import jwt
-from flask import current_app
+from flask import Blueprint, current_app, render_template
 from pydantic import ValidationError
 
-from .exception import ApiException, ApiExceptionModel
-from .response import ErrorResponse
-from .spec import InfoModel, SpecPath, UrlMapModel, spec
-from .view import get_spec, get_swagger_docs, restapi_bp
+from .exceptions import ApiException
+from .responses import ErrorResponse
+from .spec import spec
+from .spec.models import InfoModel, SpecPath, UrlMapModel
 
 
 class SpecMixin:
@@ -23,11 +23,14 @@ class SpecMixin:
         self.app.config.setdefault("SWAGGER_UI_URL", "/docs")
 
     def _register_spec(self) -> None:
+        # Add url rules and endpoint to url_maps.
         for url_map in self.app.url_map.iter_rules():
             self.spec.url_maps.append(
                 UrlMapModel(url=url_map.rule, endpoint=url_map.endpoint)
             )
 
+        # Mapping blueprint_map, endpoint_map in name,
+        # and override endpoint_map name.
         for blueprint_map in self.spec.blueprint_maps:
             for index, endpoint_map in enumerate(self.spec.endpoint_maps):
                 if endpoint_map.endpoint_name == blueprint_map.endpoint_name:
@@ -37,6 +40,8 @@ class SpecMixin:
                         f"{blueprint_map.blueprint_name}.{endpoint_map.endpoint_name}"
                     )
 
+        # Mapping url_map.endpoint, endpoint_map.endpoint_name,
+        # and register endpoint_map to spec document.
         for url_map in self.spec.url_maps:
             for endpoint_map in self.spec.endpoint_maps:
                 if url_map.endpoint == endpoint_map.endpoint_name:
@@ -55,6 +60,7 @@ class SpecMixin:
                     else:
                         self.spec.spec_model.paths.update({spec_path.url: _paths})
 
+        # Register openapi, info, components, tags to spec document.
         self.spec.spec_model.openapi = current_app.config["OPENAPI_VERSION"]
         self.spec.spec_model.info = InfoModel(
             title=current_app.config["API_TITLE"],
@@ -63,11 +69,20 @@ class SpecMixin:
         self.spec.spec_model.components = self.spec.components
         self.spec.spec_model.tags = self.spec.tags
 
+    def _get_spec(self):
+        return spec.spec_model.dict(exclude_none=True)
+
+    def _get_swagger_docs(self):
+        return render_template("swagger_ui.html")
+
     def _register_blueprint(self):
+        restapi_bp = Blueprint("restapi", __name__, template_folder="templates")
         with self.app.app_context():
-            restapi_bp.add_url_rule(current_app.config["SPEC_URL"], view_func=get_spec)
             restapi_bp.add_url_rule(
-                current_app.config["SWAGGER_UI_URL"], view_func=get_swagger_docs
+                current_app.config["SPEC_URL"], view_func=self._get_spec
+            )
+            restapi_bp.add_url_rule(
+                current_app.config["SWAGGER_UI_URL"], view_func=self._get_swagger_docs
             )
         self.app.register_blueprint(restapi_bp)
 
@@ -105,20 +120,12 @@ class ErrorHandlerMixin:
 
     def _handle_validation_error(self, error: ValidationError) -> ErrorResponse:
         self._response.status = 422
-        self._response.data = ApiExceptionModel(
-            http_code=422,
-            description=str(error),
-            error_code=422,
-            error_name="Validation error",
-        ).json()
+        self._response.data = ApiException(
+            http_code=422, description=str(error)
+        ).to_json()
         return self._response
 
     def _handle_api_exception(self, error: ApiException) -> ErrorResponse:
         self._response.status = error.http_code
-        self._response.data = ApiExceptionModel(
-            http_code=error.http_code,
-            description=error.description,
-            error_code=error.error_code or error.http_code,
-            error_name=error.error_name or "",
-        ).json()
+        self._response.data = error.to_json()
         return self._response

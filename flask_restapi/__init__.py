@@ -1,3 +1,4 @@
-from .core import Api, RequestParameters, FileStorageType  # noqa: F401
-from .exception import ApiException  # noqa: F401
-from .spec import TagModel  # noqa: F401
+from .core import Api  # noqa: F401
+from .exceptions import ApiException  # noqa: F401
+from .spec.models import TagModel  # noqa: F401
+from .types import FileStorageType, RequestParametersType  # noqa: F401

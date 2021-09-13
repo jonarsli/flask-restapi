@@ -1,40 +1,13 @@
 import functools
-from typing import Any, Generic, Optional, Type, TypeVar
+from typing import Any, Type
 
 from flask import Flask, request
 from pydantic import BaseModel
-from pydantic.generics import GenericModel
-from werkzeug.datastructures import FileStorage
 
-from .mixin import AuthTokenMixin, ErrorHandlerMixin, SpecMixin
-from .response import JSONResponse
-from .spec import BlueprintMap, TagModel
-
-DataT = TypeVar("DataT")
-
-
-class FileStorageType(bytes):
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
-    @classmethod
-    def validate(cls, v):
-        if not isinstance(v, FileStorage):
-            raise TypeError("FileStorage required")
-        return v
-
-    def __repr__(self):
-        return f"FilesType({super().__repr__()})"
-
-
-class RequestParameters(GenericModel, Generic[DataT]):
-    path: Optional[DataT]
-    query: Optional[DataT]
-    body: Optional[DataT]
-    header: Optional[DataT]
-    form: Optional[DataT]
-    token: Optional[str]
+from .mixins import AuthTokenMixin, ErrorHandlerMixin, SpecMixin
+from .responses import JSONResponse
+from .spec.models import BlueprintMap, TagModel
+from .types import RequestParametersType
 
 
 class Api(SpecMixin, AuthTokenMixin, ErrorHandlerMixin):
@@ -245,9 +218,9 @@ class Api(SpecMixin, AuthTokenMixin, ErrorHandlerMixin):
 
         return decorator
 
-    def _get_request_parameters(self) -> RequestParameters:
+    def _get_request_parameters(self) -> RequestParametersType:
         if not hasattr(request, "parameters"):
-            request.parameters = RequestParameters()
+            request.parameters = RequestParametersType()
 
         return request.parameters
 

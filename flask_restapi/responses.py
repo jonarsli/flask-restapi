@@ -1,10 +1,6 @@
 from flask import Response, jsonify
 
 
-class BaseResponse(Response):
-    default_mimetype = "application/json"
-
-
 class JSONResponse(Response):
     @classmethod
     def force_type(cls, response, environ=None):
@@ -13,5 +9,5 @@ class JSONResponse(Response):
         return super(JSONResponse, cls).force_type(response, environ)
 
 
-class ErrorResponse(BaseResponse):
-    pass
+class ErrorResponse(Response):
+    default_mimetype = "application/json"
