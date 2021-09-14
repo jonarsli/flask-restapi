@@ -1,12 +1,12 @@
 from datetime import datetime, timedelta
 from typing import Any, Dict
+from flask.helpers import make_response
 
 import jwt
-from flask import Blueprint, current_app, render_template
+from flask import Blueprint, current_app, render_template, Response
 from pydantic import ValidationError
 
 from .exceptions import ApiException
-from .responses import ErrorResponse
 from .spec import spec
 from .spec.models import InfoModel, SpecPath, UrlMapModel
 
@@ -15,7 +15,7 @@ class SpecMixin:
     def __init__(self) -> None:
         self.spec = spec
 
-    def _init_config(self):
+    def _init_config(self) -> None:
         self.app.config.setdefault("OPENAPI_VERSION", "3.0.2")
         self.app.config.setdefault("API_TITLE", "Flask RESTAPI")
         self.app.config.setdefault("API_VERSION", "0.1.0")
@@ -69,13 +69,13 @@ class SpecMixin:
         self.spec.spec_model.components = self.spec.components
         self.spec.spec_model.tags = self.spec.tags
 
-    def _get_spec(self):
+    def _get_spec(self) -> Dict[str, Any]:
         return spec.spec_model.dict(exclude_none=True)
 
-    def _get_swagger_docs(self):
+    def _get_swagger_docs(self) -> str:
         return render_template("swagger_ui.html")
 
-    def _register_blueprint(self):
+    def _register_blueprint(self) -> None:
         restapi_bp = Blueprint("restapi", __name__, template_folder="templates")
         with self.app.app_context():
             restapi_bp.add_url_rule(
@@ -91,7 +91,7 @@ class AuthTokenMixin:
     def __init__(self, algorithm: str = "HS256") -> None:
         self.algorithm = algorithm
 
-    def _init_config(self):
+    def _init_config(self) -> None:
         self.app.config.setdefault("RESTAPI_SECRET_KEY", "FlaskRESTAPIKey")
 
     def encode_token(self, expiration_time: timedelta = None, **subjects) -> str:
@@ -110,22 +110,18 @@ class AuthTokenMixin:
         )
 
 
-class ErrorHandlerMixin:
+class HandlerMixin:
     def __init__(self) -> None:
-        self._response = ErrorResponse()
+        pass
 
-    def _register_error_handlers(self) -> None:
+    def _register_handlers(self) -> None:
         self.app.register_error_handler(ApiException, self._handle_api_exception)
         self.app.register_error_handler(ValidationError, self._handle_validation_error)
 
-    def _handle_validation_error(self, error: ValidationError) -> ErrorResponse:
-        self._response.status = 422
-        self._response.data = ApiException(
-            http_code=422, description=str(error)
-        ).to_json()
-        return self._response
+    def _handle_validation_error(self, error: ValidationError) -> Response:
+        return make_response(
+            ApiException(http_code=422, description=str(error)).to_dict(), 422
+        )
 
-    def _handle_api_exception(self, error: ApiException) -> ErrorResponse:
-        self._response.status = error.http_code
-        self._response.data = error.to_json()
-        return self._response
+    def _handle_api_exception(self, error: ApiException) -> Response:
+        return make_response(error.to_dict(), error.http_code)

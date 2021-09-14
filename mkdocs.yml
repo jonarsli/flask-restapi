@@ -5,14 +5,27 @@ nav:
   - Overview: index.md
   - Install: install.md
   - Quickstart: quickstart.md
+  - Decorators:
+    - Path: decorators/path.md
+    - Query: decorators/query.md
+    - Header: decorators/header.md
+    - Body: decorators/body.md
+    - Form: decorators/form.md
+    - Auth: decorators/auth.md
+    - Response: decorators/response.md
+  - Security:
+    - JWT: security/jwt.md
   - OpenAPI: openapi.md
-  - Decorators: decorators.md
   - Blueprint: blueprint.md
-  - Function based view: function_based_view.md
+  - Function Based View: function_based_view.md
 theme:
   name: "material"
+  logo: assets/logo.png
+  favicon: assets/favicon.png
   icon:
     repo: fontawesome/brands/github
+plugins:
+  - search
 markdown_extensions:
   - pymdownx.highlight
   - pymdownx.superfences
@@ -20,3 +33,5 @@ markdown_extensions:
   - pymdownx.details
   - admonition
   - def_list
+  - toc:
+      permalink: true

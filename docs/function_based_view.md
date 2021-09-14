@@ -1,9 +1,9 @@
 ## Introduction
-
 If you don't want to use flask methodview, You can also use decorators in the case of function based view.
 !!! Note
     If you want to output spec correctly, you must describe {==endpoint_name==} and {==method_name==} on decorators
 
+## Example
 ```python hl_lines="25-31"
 from flask import Flask
 from flask.views import MethodView

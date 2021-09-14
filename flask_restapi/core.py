@@ -4,31 +4,29 @@ from typing import Any, Type
 from flask import Flask, request
 from pydantic import BaseModel
 
-from .mixins import AuthTokenMixin, ErrorHandlerMixin, SpecMixin
-from .responses import JSONResponse
+from .mixins import AuthTokenMixin, HandlerMixin, SpecMixin
 from .spec.models import BlueprintMap, TagModel
 from .types import RequestParametersType
 
 
-class Api(SpecMixin, AuthTokenMixin, ErrorHandlerMixin):
+class Api(SpecMixin, AuthTokenMixin, HandlerMixin):
     def __init__(self, app: Flask = None, algorithm: str = "HS256") -> None:
         SpecMixin.__init__(self)
         AuthTokenMixin.__init__(self, algorithm)
-        ErrorHandlerMixin.__init__(self)
+        HandlerMixin.__init__(self)
         self.app = app
         if app is not None:
             self.init_app(app)
 
     def init_app(self, app: Flask) -> None:
         self.app = app
-        self.app.response_class = JSONResponse
 
         SpecMixin._init_config(self)
         AuthTokenMixin._init_config(self)
 
         self.app.before_first_request(self._register_spec)
         self._register_blueprint()
-        self._register_error_handlers()
+        self._register_handlers()
 
     def bp_map(self, blueprint_name: str = None, endpoint_name: str = None):
         def decorator(cls):
@@ -188,7 +186,9 @@ class Api(SpecMixin, AuthTokenMixin, ErrorHandlerMixin):
                 if auth_header is not None:
                     if "Bearer" in auth_header:
                         _token = auth_header.split(" ")[1]
-                        request.parameters.token = _token
+                        request.parameters.auth = _token
+                    else:
+                        request.parameters.auth = auth_header
 
                 return func(self, request.parameters)
 

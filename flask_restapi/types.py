@@ -27,4 +27,4 @@ class RequestParametersType(GenericModel, Generic[DataT]):
     body: Optional[DataT]
     header: Optional[DataT]
     form: Optional[DataT]
-    token: Optional[str]
+    auth: Optional[str]
