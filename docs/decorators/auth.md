@@ -9,7 +9,7 @@ You can use auth decorator to receive authorization token by headers. This auth 
 
 
 ## Example
-```python hl_lines="20 27"
+```python hl_lines="21 27"
 from flask import Flask
 from flask.views import MethodView
 from pydantic import BaseModel
@@ -37,8 +37,7 @@ class User(MethodView):
         """Get a user name and id"""
         user_name = parameters.body.name
         token = parameters.auth
-        response = UserResponseSpec(id=1, name=user_name)
-        return response.dict()
+        return UserResponseSpec(id=1, name=user_name)
 
 
 app.add_url_rule("/user", view_func=User.as_view("user"))

@@ -35,8 +35,7 @@ class User(MethodView):
     def post(self, parameters: RequestParametersType):
         """Get a user name and id"""
         user_name = parameters.body.name
-        response = UserResponseSpec(id=1, name=user_name)
-        return response.dict()
+        return UserResponseSpec(id=1, name=user_name)
 
 
 app.add_url_rule("/user", view_func=User.as_view("user"))

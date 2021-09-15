@@ -4,36 +4,75 @@ If you don't want to use flask methodview, You can also use decorators in the ca
     If you want to output spec correctly, you must describe {==endpoint_name==} and {==method_name==} on decorators
 
 ## Example
-```python hl_lines="25-31"
-from flask import Flask
-from flask.views import MethodView
-from pydantic import BaseModel
 
-from flask_restapi import Api, RequestParameters
+=== "General"
+    ```python hl_lines="24-29"
+    from flask import Flask
+    from pydantic import BaseModel
 
-app = Flask(__name__)
-api = Api(app)
+    from flask_restapi import Api, RequestParametersType
 
-
-class UserGetSpec(BaseModel):
-    name: str
+    app = Flask(__name__)
+    api = Api(app)
 
 
-class UserCreateSpec(BaseModel):
-    name: str
-    password: str
+    class UserGetSpec(BaseModel):
+        name: str
 
 
-class UserResponseSpec(BaseModel):
-    id: int
-    name: str
+    class UserCreateSpec(BaseModel):
+        name: str
+        password: str
 
 
-@app.route("/user")
-@api.query(UserGetSpec, endpoint="user_get", method_name="get")
-@api.response(UserResponseSpec, endpoint="user_get", method_name="get")
-def user_get(parameters: RequestParameters):
-    user_name = parameters.query.name
-    response = UserResponseSpec(id=1, name=user_name)
-    return response.dict()
-```
+    class UserResponseSpec(BaseModel):
+        id: int
+        name: str
+
+
+    @app.route("/user")
+    @api.query(UserGetSpec, endpoint="user_get", method_name="get")
+    @api.response(UserResponseSpec, endpoint="user_get", method_name="get")
+    def user_get(self, parameters: RequestParametersType):
+        user_name = parameters.query.name
+        return UserResponseSpec(id=1, name=user_name)
+
+    ```
+
+=== "Blueprint"
+    ```python hl_lines="1 7 26 34"
+    from flask import Flask, Blueprint`
+    from pydantic import BaseModel
+
+    from flask_restapi import Api, RequestParametersType
+
+    app = Flask(__name__)
+    api = Api(app)
+    bp = Blueprint("user", import_name=__name__)
+
+
+    class UserGetSpec(BaseModel):
+        name: str
+
+
+    class UserCreateSpec(BaseModel):
+        name: str
+        password: str
+
+
+    class UserResponseSpec(BaseModel):
+        id: int
+        name: str
+
+
+    @bp.route("/user")
+    @api.bp_map(bp.name)
+    @api.query(UserGetSpec, endpoint="user_get", method_name="get")
+    @api.response(UserResponseSpec, endpoint="user_get", method_name="get")
+    def user_get(self, parameters: RequestParametersType):
+        user_name = parameters.query.name
+        return UserResponseSpec(id=1, name=user_name)
+
+
+    app.register_blueprint(bp)
+    ```

@@ -1,10 +1,10 @@
 ## Introduction
 Flask-REST API auth is a thin integration of PyJWT. Implemented an auth decorator to pass token. And include Encode, Decode function.
 !!! Note
-    For the usage of auth decorator, please refer to
+    For the usage of auth decorator, please refer to [Path](/decorators/path).
 
 ## Example
-```python hl_lines="45 52 58 61 64-66"
+```python hl_lines="45 50 56 59 62-64 67"
 from flask import Flask
 from flask.views import MethodView
 from pydantic import BaseModel
@@ -40,8 +40,8 @@ class UserAuthErrorResponseSpec(BaseModel):
 
 class User(MethodView):
     @api.body(UserLoginSpec)
-    @api.response(UserLoginResponseSpec)
     @api.response(UserAuthErrorResponseSpec, code=401)
+    @api.response(UserLoginResponseSpec)
     def post(self, parameters: RequestParametersType):
         """User login"""
         # You can verify username and password
@@ -50,11 +50,9 @@ class User(MethodView):
         if user_name == "admin" and user_password == "hello":
             # Encode token
             token = api.encode_token(username=user_name)
+            return UserLoginResponseSpec(token=token)
 
-            response = UserLoginResponseSpec(token=token)
-            return response.dict()
-        else:
-            raise ApiException(401, description="Username or password incorrect")
+        raise ApiException(401, description="Username or password incorrect")
 
     @api.auth()
     @api.query(UserGetSpec)
@@ -74,9 +72,9 @@ class User(MethodView):
 
         # You can verify payload info
         if sub["username"] == "admin":
-            response = UserGetResponseSpec(id=1, name="admin")
+            return UserGetResponseSpec(id=1, name="admin")
 
-        return response.dict()
+        raise ApiException(401, description="Username or password incorrect")
 
 
 app.add_url_rule("/user", view_func=User.as_view("user"))

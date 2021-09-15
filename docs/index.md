@@ -12,7 +12,7 @@ from flask import Flask
 from flask.views import MethodView
 from pydantic import BaseModel
 
-from flask_restapi import Api, RequestParameters
+from flask_restapi import Api, RequestParametersType
 
 app = Flask(__name__)
 api = Api(app)
@@ -30,14 +30,14 @@ class UserResponseSpec(BaseModel):
 class User(MethodView):
     @api.query(UserGetSpec)
     @api.response(UserResponseSpec)
-    def get(self, parameters: RequestParameters):
+    def get(self, parameters: RequestParametersType):
         """Get a user name and id"""
         user_name = parameters.query.name
-        response = UserResponseSpec(id=1, name=user_name)
-        return response.dict()
+        return UserResponseSpec(id=1, name=user_name)
 
 
 app.add_url_rule("/user", view_func=User.as_view("user"))
+
 ```
 
 ## Swagger API docs

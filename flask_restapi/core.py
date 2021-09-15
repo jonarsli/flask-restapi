@@ -1,7 +1,7 @@
 import functools
-from typing import Any, Type
+from typing import Any, Dict, Type
 
-from flask import Flask, request
+from flask import Flask, request, make_response
 from pydantic import BaseModel
 
 from .exceptions import ValidationErrorResponses
@@ -203,6 +203,7 @@ class Api(SpecMixin, AuthTokenMixin, HandlerMixin):
         endpoint: str = None,
         method_name: str = None,
         content_type: list = ["application/json"],
+        headers: Dict[str, Any] = None,
         code: int = 200,
         default_validation_error: bool = True,
     ):
@@ -218,9 +219,22 @@ class Api(SpecMixin, AuthTokenMixin, HandlerMixin):
             @functools.wraps(func)
             def wrapper(func_self=None, *args, **kwargs):
                 request.parameters = self._get_request_parameters()
-                response = func(func_self, request.parameters, **kwargs)
-                if isinstance(response, BaseModel):
-                    return response.dict()
+                result = func(func_self, request.parameters, **kwargs)
+                if isinstance(result, BaseModel):
+                    response = make_response(result.dict(exclude={"headers"}), code)
+                else:
+                    response = make_response(result, code)
+
+                # Add header from result
+                if hasattr(result, "headers"):
+                    if isinstance(result.headers, dict):
+                        for key, value in result.headers.items():
+                            response.headers[key] = value
+
+                # Add header from decorator
+                if isinstance(headers, dict):
+                    for key, value in headers.items():
+                        response.headers[key] = value
 
                 return response
 

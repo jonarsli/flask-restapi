@@ -1,7 +1,6 @@
 ## API parameters
 
-Flask-RESTAPI automatically generates an OpenAPI documentation.  
-And you can set the parameters of Open API Sepc through Flask config.  
+Flask-RESTAPI automatically generates an OpenAPI documentation. And you can set the parameters of Open API Sepc through Flask config.  
 
 ---
 

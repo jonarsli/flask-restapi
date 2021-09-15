@@ -13,10 +13,11 @@ nav:
     - Form: decorators/form.md
     - Auth: decorators/auth.md
     - Response: decorators/response.md
+    - Blueprint Map: decorators/bp_map.md
+  - Response: response.md
   - Security:
     - JWT: security/jwt.md
   - OpenAPI: openapi.md
-  - Blueprint: blueprint.md
   - Function Based View: function_based_view.md
 theme:
   name: "material"
@@ -27,6 +28,7 @@ theme:
 plugins:
   - search
 markdown_extensions:
+  - pymdownx.tabbed
   - pymdownx.highlight
   - pymdownx.superfences
   - pymdownx.critic
