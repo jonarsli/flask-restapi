@@ -4,6 +4,7 @@ from typing import Any, Type
 from flask import Flask, request
 from pydantic import BaseModel
 
+from .exceptions import ValidationErrorResponses
 from .mixins import AuthTokenMixin, HandlerMixin, SpecMixin
 from .spec.models import BlueprintMap, TagModel
 from .types import RequestParametersType
@@ -57,11 +58,11 @@ class Api(SpecMixin, AuthTokenMixin, HandlerMixin):
             )
 
             @functools.wraps(func)
-            def wrapper(*args, **kwargs):
+            def wrapper(func_self=None, *args, **kwargs):
                 request.parameters = self._get_request_parameters()
                 _headers = dict((k.lower(), v) for k, v in request.headers.items())
                 request.parameters.header = schema(**_headers)
-                return func(self, request.parameters)
+                return func(func_self, request.parameters, **kwargs)
 
             return wrapper
 
@@ -82,10 +83,10 @@ class Api(SpecMixin, AuthTokenMixin, HandlerMixin):
             self.spec.store_parameters("path", schema, ep, _method_name, tag, _summary)
 
             @functools.wraps(func)
-            def wrapper(*args, **kwargs):
+            def wrapper(func_self=None, *args, **kwargs):
                 request.parameters = self._get_request_parameters()
                 request.parameters.path = schema(**request.view_args)
-                return func(self, request.parameters)
+                return func(func_self, request.parameters, **kwargs)
 
             return wrapper
 
@@ -106,10 +107,10 @@ class Api(SpecMixin, AuthTokenMixin, HandlerMixin):
             self.spec.store_parameters("query", schema, ep, _method_name, tag, _summary)
 
             @functools.wraps(func)
-            def wrapper(*args, **kwargs):
+            def wrapper(func_self=None, *args, **kwargs):
                 request.parameters = self._get_request_parameters()
                 request.parameters.query = schema(**request.args.to_dict())
-                return func(self, request.parameters)
+                return func(func_self, request.parameters, **kwargs)
 
             return wrapper
 
@@ -131,11 +132,11 @@ class Api(SpecMixin, AuthTokenMixin, HandlerMixin):
             self.spec.store_body(schema, ep, _method_name, content_type, tag, _summary)
 
             @functools.wraps(func)
-            def wrapper(*args, **kwargs):
+            def wrapper(func_self=None, *args, **kwargs):
                 request.parameters = self._get_request_parameters()
                 body: Any = request.get_json()
                 request.parameters.body = schema(**body)
-                return func(self, request.parameters)
+                return func(func_self, request.parameters, **kwargs)
 
             return wrapper
 
@@ -157,7 +158,7 @@ class Api(SpecMixin, AuthTokenMixin, HandlerMixin):
             self.spec.store_body(schema, ep, _method_name, content_type, tag, _summary)
 
             @functools.wraps(func)
-            def wrapper(*args, **kwargs):
+            def wrapper(func_self=None, *args, **kwargs):
                 request.parameters = self._get_request_parameters()
                 _form = {}
                 if request.files.to_dict():
@@ -167,7 +168,7 @@ class Api(SpecMixin, AuthTokenMixin, HandlerMixin):
                     _form.update(request.form.to_dict())
 
                 request.parameters.form = schema(**_form)
-                return func(self, request.parameters)
+                return func(func_self, request.parameters, **kwargs)
 
             return wrapper
 
@@ -180,7 +181,7 @@ class Api(SpecMixin, AuthTokenMixin, HandlerMixin):
             self.spec.store_auth(ep, _method_name)
 
             @functools.wraps(func)
-            def wrapper(*args, **kwargs):
+            def wrapper(func_self=None, *args, **kwargs):
                 request.parameters = self._get_request_parameters()
                 auth_header = request.headers.get("Authorization")
                 if auth_header is not None:
@@ -190,7 +191,7 @@ class Api(SpecMixin, AuthTokenMixin, HandlerMixin):
                     else:
                         request.parameters.auth = auth_header
 
-                return func(self, request.parameters)
+                return func(func_self, request.parameters, **kwargs)
 
             return wrapper
 
@@ -203,16 +204,25 @@ class Api(SpecMixin, AuthTokenMixin, HandlerMixin):
         method_name: str = None,
         content_type: list = ["application/json"],
         code: int = 200,
+        default_validation_error: bool = True,
     ):
         def decorator(func):
             ep = endpoint if endpoint else self._generate_endpoint(func.__qualname__)
             _method_name = method_name or func.__name__
             self.spec.store_responses(code, schema, ep, _method_name, content_type)
+            if default_validation_error:
+                self.spec.store_responses(
+                    422, ValidationErrorResponses, ep, _method_name, content_type
+                )
 
             @functools.wraps(func)
-            def wrapper(*args, **kwargs):
+            def wrapper(func_self=None, *args, **kwargs):
                 request.parameters = self._get_request_parameters()
-                return func(self, request.parameters)
+                response = func(func_self, request.parameters, **kwargs)
+                if isinstance(response, BaseModel):
+                    return response.dict()
+
+                return response
 
             return wrapper
 

@@ -1,12 +1,12 @@
 from datetime import datetime, timedelta
 from typing import Any, Dict
-from flask.helpers import make_response
 
 import jwt
-from flask import Blueprint, current_app, render_template, Response
+from flask import Blueprint, Response, current_app, render_template
+from flask.helpers import make_response
 from pydantic import ValidationError
 
-from .exceptions import ApiException
+from .exceptions import ApiException, ValidationErrorResponses
 from .spec import spec
 from .spec.models import InfoModel, SpecPath, UrlMapModel
 
@@ -120,7 +120,7 @@ class HandlerMixin:
 
     def _handle_validation_error(self, error: ValidationError) -> Response:
         return make_response(
-            ApiException(http_code=422, description=str(error)).to_dict(), 422
+            ValidationErrorResponses(results=error.errors()).dict(), 422
         )
 
     def _handle_api_exception(self, error: ApiException) -> Response:

@@ -1,5 +1,7 @@
 import json
-from typing import Any, Dict
+from typing import Any, Dict, List, Optional
+
+from pydantic import BaseModel
 
 
 class ApiException(Exception):
@@ -13,3 +15,16 @@ class ApiException(Exception):
 
     def to_json(self) -> str:
         return json.dumps(self.__dict__)
+
+
+class ValidationErrorResult(BaseModel):
+    loc: list
+    type: str
+    msg: str
+    ctx: Optional[Dict[str, Any]]
+
+
+class ValidationErrorResponses(BaseModel):
+    """No matter how many errors there are, an exception will be raised."""
+
+    results: List[ValidationErrorResult]
