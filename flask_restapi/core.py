@@ -5,15 +5,14 @@ from flask import Flask, request, make_response
 from pydantic import BaseModel
 
 from .exceptions import ValidationErrorResponses
-from .mixins import AuthTokenMixin, HandlerMixin, SpecMixin
+from .mixins import HandlerMixin, SpecMixin
 from .spec.models import BlueprintMap, TagModel
 from .types import RequestParametersType
 
 
-class Api(SpecMixin, AuthTokenMixin, HandlerMixin):
-    def __init__(self, app: Flask = None, algorithm: str = "HS256") -> None:
+class Api(SpecMixin, HandlerMixin):
+    def __init__(self, app: Flask = None) -> None:
         SpecMixin.__init__(self)
-        AuthTokenMixin.__init__(self, algorithm)
         HandlerMixin.__init__(self)
         self.app = app
         if app is not None:
@@ -23,13 +22,19 @@ class Api(SpecMixin, AuthTokenMixin, HandlerMixin):
         self.app = app
 
         SpecMixin._init_config(self)
-        AuthTokenMixin._init_config(self)
 
         self.app.before_first_request(self._register_spec)
         self._register_blueprint()
         self._register_handlers()
 
     def bp_map(self, blueprint_name: str = None, endpoint_name: str = None):
+        """Bind the URL endpoint to the blueprint name.
+
+        Args:
+            blueprint_name (str, optional): Flask blueprint name. Defaults to None.
+            endpoint_name (str, optional): Flask url endpoint name. Defaults to None.
+        """
+
         def decorator(cls):
             blueprint_map = BlueprintMap(
                 endpoint_name=endpoint_name or cls.__name__.lower(),
@@ -49,6 +54,16 @@ class Api(SpecMixin, AuthTokenMixin, HandlerMixin):
         tag: Type[TagModel] = None,
         summary: str = None,
     ):
+        """Receive request url path.
+
+        Args:
+            schema (Type[BaseModel]): Models are classes which inherit from `BaseModel`.
+            endpoint (str, optional): Flask url endpoint name. Defaults to None.
+            method_name (str, optional): Endpoint method name. Defaults to None.
+            tag (Type[TagModel], optional): List of tags to each API operation. Defaults to None.
+            summary (str, optional): Override spec summary. Defaults to None.
+        """
+
         def decorator(func):
             ep = endpoint if endpoint else self._generate_endpoint(func.__qualname__)
             _method_name = method_name or func.__name__
@@ -76,6 +91,16 @@ class Api(SpecMixin, AuthTokenMixin, HandlerMixin):
         tag: Type[TagModel] = None,
         summary: str = None,
     ):
+        """Receive request url path
+
+        Args:
+            schema (Type[BaseModel]): Models are classes which inherit from `BaseModel`.
+            endpoint (str, optional): Flask url endpoint name. Defaults to None.
+            method_name (str, optional): Endpoint method name. Defaults to None.
+            tag (Type[TagModel], optional): List of tags to each API operation. Defaults to None.
+            summary (str, optional): Override spec summary. Defaults to None.
+        """
+
         def decorator(func):
             ep = endpoint if endpoint else self._generate_endpoint(func.__qualname__)
             _method_name = method_name or func.__name__
@@ -100,6 +125,16 @@ class Api(SpecMixin, AuthTokenMixin, HandlerMixin):
         tag: Type[TagModel] = None,
         summary: str = None,
     ):
+        """Receive request query string.
+
+        Args:
+            schema (Type[BaseModel]): Models are classes which inherit from `BaseModel`.
+            endpoint (str, optional): Flask url endpoint name. Defaults to None.
+            method_name (str, optional): Endpoint method name. Defaults to None.
+            tag (Type[TagModel], optional): List of tags to each API operation. Defaults to None.
+            summary (str, optional): Override spec summary. Defaults to None.
+        """
+
         def decorator(func):
             ep = endpoint if endpoint else self._generate_endpoint(func.__qualname__)
             _method_name = method_name or func.__name__
@@ -125,6 +160,17 @@ class Api(SpecMixin, AuthTokenMixin, HandlerMixin):
         tag: Type[TagModel] = None,
         summary: str = None,
     ):
+        """Receive request body.
+
+        Args:
+            schema (Type[BaseModel]): Models are classes which inherit from `BaseModel`.
+            endpoint (str, optional): Flask url endpoint name. Defaults to None.
+            method_name (str, optional): Endpoint method name. Defaults to None.
+            content_type (list, optional): HTTP content-type. Defaults to "application/json".
+            tag (Type[TagModel], optional): List of tags to each API operation. Defaults to None.
+            summary (str, optional): Override spec summary. Defaults to None.
+        """
+
         def decorator(func):
             ep = endpoint if endpoint else self._generate_endpoint(func.__qualname__)
             _method_name = method_name or func.__name__
@@ -151,6 +197,17 @@ class Api(SpecMixin, AuthTokenMixin, HandlerMixin):
         tag: Type[TagModel] = None,
         summary: str = None,
     ):
+        """Receive request form data.
+
+        Args:
+            schema (Type[BaseModel]): Models are classes which inherit from `BaseModel`.
+            endpoint (str, optional): Flask url endpoint name. Defaults to None.
+            method_name (str, optional): Endpoint method name. Defaults to None.
+            content_type (list, optional): HTTP content-type]. Defaults to "application/json".
+            tag (Type[TagModel], optional): List of tags to each API operation. Defaults to None.
+            summary (str, optional): Override spec summary. Defaults to None.
+        """
+
         def decorator(func):
             ep = endpoint if endpoint else self._generate_endpoint(func.__qualname__)
             _method_name = method_name or func.__name__
@@ -175,6 +232,13 @@ class Api(SpecMixin, AuthTokenMixin, HandlerMixin):
         return decorator
 
     def auth(self, endpoint: str = None, method_name: str = None):
+        """Receive authorization token by headers. This auth decorator will get the Authorization of Flask request.headers and mark the endpoint on the spec as requiring verification.
+
+        Args:
+            endpoint (str, optional): Flask url endpoint name. Defaults to None.
+            method_name (str, optional): Endpoint method name. Defaults to None.
+        """
+
         def decorator(func):
             ep = endpoint if endpoint else self._generate_endpoint(func.__qualname__)
             _method_name = method_name or func.__name__
@@ -207,6 +271,18 @@ class Api(SpecMixin, AuthTokenMixin, HandlerMixin):
         code: int = 200,
         default_validation_error: bool = True,
     ):
+        """Make response schema to spec document and auto converted to dictionary.
+
+        Args:
+            schema (Type[BaseModel]): Models are classes which inherit from `BaseModel`.
+            endpoint (str, optional): Flask url endpoint name. Defaults to None.
+            method_name (str, optional): Endpoint method name. Defaults to None.
+            content_type (list, optional): HTTP content-type]. Defaults to "application/json".
+            headers (Dict[str, Any], optional): Response additional headers. Defaults to None.
+            code (int, optional): HTTP status code. Defaults to 200.
+            default_validation_error (bool, optional): Whether to show on spec. Defaults to True.
+        """
+
         def decorator(func):
             ep = endpoint if endpoint else self._generate_endpoint(func.__qualname__)
             _method_name = method_name or func.__name__

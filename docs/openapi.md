@@ -4,9 +4,6 @@ Flask-RESTAPI automatically generates an OpenAPI documentation. And you can set 
 
 ---
 
-`RESTAPI_SECRET_KEY`
-:   A key suitable for the chosen algorithm.
-
 `OPENAPI_VERSION`
 :   This string MUST be the semantic version number of the OpenAPI
     Specification version that the OpenAPI document uses.

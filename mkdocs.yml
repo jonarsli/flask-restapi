@@ -15,10 +15,13 @@ nav:
     - Response: decorators/response.md
     - Blueprint Map: decorators/bp_map.md
   - Response: response.md
-  - Security:
-    - JWT: security/jwt.md
+  - Tag: tag.md
+  - Upload files: files.md
   - OpenAPI: openapi.md
   - Function Based View: function_based_view.md
+  - API Reference:
+    - Core: api/core.md
+    - Exceptions: api/exceptions.md
 theme:
   name: "material"
   logo: assets/logo.png
@@ -27,6 +30,16 @@ theme:
     repo: fontawesome/brands/github
 plugins:
   - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          rendering:
+            show_root_heading: true
+            show_source: true
+      watch:
+        - flask_restapi
+
 markdown_extensions:
   - pymdownx.tabbed
   - pymdownx.highlight

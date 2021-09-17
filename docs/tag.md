@@ -1,17 +1,16 @@
 ## Introduction
-If you want to use flask blueprint, in order to bind the URL endpoint to the blueprint name, you must add the `bp_map` decorator to the class.
+Decorators (path, query, title, body, form) have `tag` parameters, which can be used to distinguish API operations.
 
 ## Example
-```python hl_lines="1 9 21 31 32"
-from flask import Flask, Blueprint
+```python hl_lines="5 21"
+from flask import Flask
 from flask.views import MethodView
 from pydantic import BaseModel
 
-from flask_restapi import Api, RequestParametersType
+from flask_restapi import Api, RequestParametersType, TagModel
 
 app = Flask(__name__)
 api = Api(app)
-bp = Blueprint("user", import_name=__name__)
 
 
 class UserGetSpec(BaseModel):
@@ -23,9 +22,8 @@ class UserResponseSpec(BaseModel):
     name: str
 
 
-@api.bp_map(bp.name)
 class User(MethodView):
-    @api.query(UserGetSpec)
+    @api.query(UserGetSpec, tag=TagModel(name="user", description="User tag"))
     @api.response(UserResponseSpec)
     def get(self, parameters: RequestParametersType):
         """Get a user name and id"""
@@ -33,6 +31,5 @@ class User(MethodView):
         return UserResponseSpec(id=1, name=user_name)
 
 
-bp.add_url_rule("/user", view_func=User.as_view("user"))
-app.register_blueprint(bp)
+app.add_url_rule("/user", view_func=User.as_view("user"))
 ```

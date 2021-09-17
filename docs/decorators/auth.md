@@ -1,5 +1,5 @@
 ## Introduction
-You can use auth decorator to receive authorization token by headers. This auth decorator will get the Authorization of Flask request.headers and mark the endpoint on the spec as requiring verification.
+You can use auth decorator to receive authorization token by headers. This auth decorator will get the Authorization of Flask `request.headers` and mark the endpoint on the spec as requiring verification.
 !!! Note
     If Authorization prefix contains "Bearer", it will be automatically removed
 

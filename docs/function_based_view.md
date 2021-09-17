@@ -40,7 +40,7 @@ If you don't want to use flask methodview, You can also use decorators in the ca
     ```
 
 === "Blueprint"
-    ```python hl_lines="1 7 26 34"
+    ```python hl_lines="1 8 26 34"
     from flask import Flask, Blueprint`
     from pydantic import BaseModel
 
