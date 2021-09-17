@@ -2,11 +2,18 @@
 
 [![license](https://img.shields.io/github/license/jonarsli/flask-restapi.svg)](https://github.com/jonarsli/flask-restapi/blob/master/LICENSE)
 
+[Flask-RESTAPI document](https://jonarsli.github.io/flask-restapi/)
+
 Flask-RESTAPI is an extension for Flask that is a database-agnostic framework library for creating REST APIs. It is a lightweight abstraction that works with your existing ORM/libraries.
 
 It use pydantic to validate and serialize data. OpenAPI document can be automatically generated through the python decorator and it supports swagger ui display.
 
 Pydantic are used to validate and serialize parameters. For details, please refer to the [pydantic documentation](https://pydantic-docs.helpmanual.io/).
+
+## Installation
+```bash
+pip install flask-restapi
+```
 
 ## Example
 ```python
