@@ -1,6 +1,8 @@
 # Flask-RESTAPI
 
 [![license](https://img.shields.io/github/license/jonarsli/flask-restapi.svg)](https://github.com/jonarsli/flask-restapi/blob/master/LICENSE)
+[![pypi](https://img.shields.io/pypi/v/flask-restapi.svg)](https://pypi.python.org/pypi/flask-restapi)
+
 
 [Flask-RESTAPI document](https://jonarsli.github.io/flask-restapi/)
 
