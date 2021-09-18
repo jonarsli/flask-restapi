@@ -1,7 +1,7 @@
 import functools
 from typing import Any, Dict, Type
 
-from flask import Flask, request, make_response
+from flask import Flask, current_app, make_response, request
 from pydantic import BaseModel
 
 from .exceptions import ValidationErrorResponses
@@ -77,7 +77,9 @@ class Api(SpecMixin, HandlerMixin):
                 request.parameters = self._get_request_parameters()
                 _headers = dict((k.lower(), v) for k, v in request.headers.items())
                 request.parameters.header = schema(**_headers)
-                return func(func_self, request.parameters, **kwargs)
+                return current_app.ensure_sync(func)(
+                    func_self, request.parameters, **kwargs
+                )
 
             return wrapper
 
@@ -111,7 +113,9 @@ class Api(SpecMixin, HandlerMixin):
             def wrapper(func_self=None, *args, **kwargs):
                 request.parameters = self._get_request_parameters()
                 request.parameters.path = schema(**request.view_args)
-                return func(func_self, request.parameters, **kwargs)
+                return current_app.ensure_sync(func)(
+                    func_self, request.parameters, **kwargs
+                )
 
             return wrapper
 
@@ -145,7 +149,9 @@ class Api(SpecMixin, HandlerMixin):
             def wrapper(func_self=None, *args, **kwargs):
                 request.parameters = self._get_request_parameters()
                 request.parameters.query = schema(**request.args.to_dict())
-                return func(func_self, request.parameters, **kwargs)
+                return current_app.ensure_sync(func)(
+                    func_self, request.parameters, **kwargs
+                )
 
             return wrapper
 
@@ -182,7 +188,9 @@ class Api(SpecMixin, HandlerMixin):
                 request.parameters = self._get_request_parameters()
                 body: Any = request.get_json()
                 request.parameters.body = schema(**body)
-                return func(func_self, request.parameters, **kwargs)
+                return current_app.ensure_sync(func)(
+                    func_self, request.parameters, **kwargs
+                )
 
             return wrapper
 
@@ -225,7 +233,9 @@ class Api(SpecMixin, HandlerMixin):
                     _form.update(request.form.to_dict())
 
                 request.parameters.form = schema(**_form)
-                return func(func_self, request.parameters, **kwargs)
+                return current_app.ensure_sync(func)(
+                    func_self, request.parameters, **kwargs
+                )
 
             return wrapper
 
@@ -255,7 +265,9 @@ class Api(SpecMixin, HandlerMixin):
                     else:
                         request.parameters.auth = auth_header
 
-                return func(func_self, request.parameters, **kwargs)
+                return current_app.ensure_sync(func)(
+                    func_self, request.parameters, **kwargs
+                )
 
             return wrapper
 
@@ -295,7 +307,9 @@ class Api(SpecMixin, HandlerMixin):
             @functools.wraps(func)
             def wrapper(func_self=None, *args, **kwargs):
                 request.parameters = self._get_request_parameters()
-                result = func(func_self, request.parameters, **kwargs)
+                result = current_app.ensure_sync(func)(
+                    func_self, request.parameters, **kwargs
+                )
                 if isinstance(result, BaseModel):
                     response = make_response(result.dict(exclude={"headers"}), code)
                 else:
