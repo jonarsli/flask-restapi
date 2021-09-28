@@ -47,11 +47,12 @@ class Spec:
         schema_dict = schema.schema()
         description = schema_dict.get("description") or "No description"
         parameters: List[ParameterModel] = []
+        required = schema_dict.get("required") or []
         for key, value in schema_dict["properties"].items():
             parameter = ParameterModel(
                 name=key,
                 location=location,
-                required=True if key in schema_dict["required"] else False,
+                required=True if key in required else False,
                 api_schema=value,
             )
             parameters.append(parameter)
