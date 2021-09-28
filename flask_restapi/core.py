@@ -148,7 +148,15 @@ class Api(SpecMixin, HandlerMixin):
             @functools.wraps(func)
             def wrapper(func_self=None, *args, **kwargs):
                 request.parameters = self._get_request_parameters()
-                request.parameters.query = schema(**request.args.to_dict())
+                req_args = request.args.to_dict(flat=False)
+                normalize_query = {}
+                for key, value in req_args.items():
+                    if len(value) > 1:
+                        normalize_query.update({key: value})
+                    else:
+                        normalize_query.update({key: value[0]})
+
+                request.parameters.query = schema(**normalize_query)
                 return current_app.ensure_sync(func)(
                     func_self, request.parameters, **kwargs
                 )

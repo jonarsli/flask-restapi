@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "flask-restapi"
-version = "0.2.3"
+version = "0.2.4"
 description = "Flask-RESTAPI is an extension for validate and make OpenAPI docs."
 authors = ["jonars <jonarsli13@gmail.com>"]
 license = "MIT"
