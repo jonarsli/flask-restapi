@@ -50,20 +50,12 @@ class Spec:
         required = schema_dict.get("required") or []
         for key, value in schema_dict["properties"].items():
             parameter = ParameterModel(
-                name=key,
-                location=location,
-                required=True if key in required else False,
-                api_schema=value,
+                name=key, location=location, required=True if key in required else False, api_schema=value
             )
             parameters.append(parameter)
 
         self._inject_endpoint(
-            endpoint_name,
-            method_name,
-            parameters=parameters,
-            tag=tag,
-            description=description,
-            summary=summary,
+            endpoint_name, method_name, parameters=parameters, tag=tag, description=description, summary=summary
         )
 
     def store_body(
@@ -85,23 +77,12 @@ class Spec:
             content.update({ct: common_schema})
 
         request_body = RequestBodyModel(description=description, content=content)
-
-        self._inject_endpoint(
-            endpoint_name,
-            method_name,
-            request_body=request_body,
-            tag=tag,
-            summary=summary,
-        )
+        self._inject_endpoint(endpoint_name, method_name, request_body=request_body, tag=tag, summary=summary)
 
     def store_auth(self, endpoint_name: str, method_name: str) -> None:
         if not self.components.securitySchemes:
             self.components.securitySchemes = {
-                "bearerAuth": {
-                    "type": "http",
-                    "scheme": "bearer",
-                    "bearerFormat": "JWT",
-                }
+                "bearerAuth": {"type": "http", "scheme": "bearer", "bearerFormat": "JWT"}
             }
         security = [{"bearerAuth": []}]
         self._inject_endpoint(endpoint_name, method_name, security=security)
