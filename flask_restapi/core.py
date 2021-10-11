@@ -12,21 +12,18 @@ from .types import RequestParametersType
 
 
 class Api(SpecMixin, HandlerMixin):
-    def __init__(self, app: Flask = None, auto_push_ctx: bool = True) -> None:
+    def __init__(self, app: Flask = None) -> None:
         self.spec = Spec()
         self.app = app
         if app is not None:
-            self.init_app(app, auto_push_ctx)
+            self.init_app(app)
 
-    def init_app(self, app: Flask, auto_push_ctx: bool = True) -> None:
+    def init_app(self, app: Flask) -> None:
         self.app = app
         super().init_app()
 
         self.app.before_first_request(self._register_spec)
-        if auto_push_ctx:
-            with self.app.app_context():
-                self._register_blueprint()
-        else:
+        with self.app.app_context():
             self._register_blueprint()
 
         self._register_handlers()
