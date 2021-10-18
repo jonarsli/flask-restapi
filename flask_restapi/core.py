@@ -4,14 +4,15 @@ from typing import Any, Dict, Type
 from flask import Flask, current_app, make_response, request
 from pydantic import BaseModel
 
+from . import commands
 from .exceptions import ValidationErrorResponses
-from .mixins import HandlerMixin, SpecMixin
-from .spec.models import BlueprintMap, TagModel
+from .mixins import HandlerMixin, SpecMixin, AuthMixin
 from .spec.core import Spec
+from .spec.models import BlueprintMap, TagModel
 from .types import RequestParametersType
 
 
-class Api(SpecMixin, HandlerMixin):
+class Api(SpecMixin, AuthMixin, HandlerMixin):
     def __init__(self, app: Flask = None) -> None:
         self.spec = Spec()
         self.app = app
@@ -27,6 +28,7 @@ class Api(SpecMixin, HandlerMixin):
             self._register_blueprint()
 
         self._register_handlers()
+        self.app.cli.add_command(commands.api_cli)
 
     def bp_map(self, blueprint_name: str = None, endpoint_name: str = None):
         """Bind the URL endpoint to the blueprint name.

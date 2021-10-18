@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "flask-restapi"
-version = "0.2.7"
+version = "0.3.0"
 description = "Flask-RESTAPI is an extension for validate and make OpenAPI docs."
 authors = ["jonars <jonarsli13@gmail.com>"]
 license = "MIT"
@@ -13,6 +13,7 @@ documentation = "https://jonarsli.github.io/flask-restapi/"
 python = "^3.7"
 Flask = {extras = ["async"], version = "^2.0.1"}
 pydantic = "^1.8.2"
+PyJWT = "^2.3.0"
 
 [tool.poetry.dev-dependencies]
 black = "^21.6b0"

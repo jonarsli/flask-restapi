@@ -1,5 +1,7 @@
-from typing import Any, Dict
+from datetime import datetime, timedelta
+from typing import Any, Dict, Iterable
 
+import jwt
 from flask import Blueprint, Response, current_app, render_template
 from flask.helpers import make_response
 from pydantic import ValidationError
@@ -10,6 +12,7 @@ from .spec.models import InfoModel, SpecPath, UrlMapModel
 
 class SpecMixin:
     def init_app(self) -> None:
+        super().init_app()
         self.app.config.setdefault("OPENAPI_VERSION", "3.0.2")
         self.app.config.setdefault("API_TITLE", "Flask RESTAPI")
         self.app.config.setdefault("API_VERSION", "0.1.0")
@@ -73,6 +76,9 @@ class SpecMixin:
 
 
 class HandlerMixin:
+    def init_app(self) -> None:
+        pass
+
     def _register_handlers(self) -> None:
         self.app.register_error_handler(ApiException, self._handle_api_exception)
         self.app.register_error_handler(ValidationError, self._handle_validation_error)
@@ -82,3 +88,34 @@ class HandlerMixin:
 
     def _handle_api_exception(self, error: ApiException) -> Response:
         return make_response(error.to_dict(), error.http_code)
+
+
+class AuthMixin:
+    def init_app(self) -> None:
+        super().init_app()
+        self.algorithm = "HS256"
+        self.app.config.setdefault("RESTAPI_ENCODE_KEY", "FlaskRESTAPIKey")
+        self.app.config.setdefault("RESTAPI_DECODE_KEY", "FlaskRESTAPIKey")
+
+    def set_algorithm(self, algorithm: str) -> None:
+        self.algorithm = algorithm
+
+    def encode_jwt(self, expiration_time: timedelta = None, **payloads) -> str:
+        payload = {
+            "iss": "",
+            "sub": "",
+            "aud": [""],
+            "exp": datetime.utcnow() + (expiration_time or timedelta(days=1)),
+            "nbf": datetime.utcnow(),
+            "iat": datetime.utcnow(),
+            "jti": "",
+        }
+        for key, value in payloads.items():
+            payload.update({key: value})
+
+        return jwt.encode(payload, current_app.config["RESTAPI_ENCODE_KEY"], self.algorithm)
+
+    def decode_jwt(self, encoded_token: str, audience: Iterable = [""], **options) -> Dict[str, Any]:
+        return jwt.decode(
+            encoded_token, current_app.config["RESTAPI_DECODE_KEY"], self.algorithm, audience=audience, **options
+        )
