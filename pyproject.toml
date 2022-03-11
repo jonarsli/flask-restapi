@@ -19,7 +19,7 @@ PyJWT = "^2.3.0"
 black = "^21.6b0"
 isort = "^5.8.0"
 flake8 = "^3.9.2"
-mkdocs = "^1.2.2"
+mkdocs = "^1.2.3"
 mkdocs-material = "^7.2.6"
 mkdocstrings = "^0.15.2"
 
