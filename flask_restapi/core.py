@@ -188,7 +188,7 @@ class Api(SpecMixin, AuthMixin, HandlerMixin):
             @functools.wraps(func)
             def wrapper(func_self=None, *args, **kwargs):
                 request.parameters = self._get_request_parameters()
-                body: Any = request.get_json()
+                body: dict = request.get_json() or dict()
                 request.parameters.body = schema(**body)
                 return current_app.ensure_sync(func)(func_self, request.parameters, **kwargs)
 
