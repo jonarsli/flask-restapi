@@ -1,0 +1,1981 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.2.15">
+    
+    
+      
+        <title>Core - Flask-RESTAPI</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.c382b1dc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.cc9b2e1e.min.css">
+        
+      
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#flask_restapi.core.Api" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Flask-RESTAPI" class="md-header__button md-logo" aria-label="Flask-RESTAPI" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Flask-RESTAPI
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Core
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/JonarsLi/flask-restapi" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    JonarsLi/flask-restapi
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Flask-RESTAPI" class="md-nav__button md-logo" aria-label="Flask-RESTAPI" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    Flask-RESTAPI
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/JonarsLi/flask-restapi" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    JonarsLi/flask-restapi
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../install/" class="md-nav__link">
+        Install
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quickstart/" class="md-nav__link">
+        Quickstart
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Decorators
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Decorators" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Decorators
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decorators/path/" class="md-nav__link">
+        Path
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decorators/query/" class="md-nav__link">
+        Query
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decorators/header/" class="md-nav__link">
+        Header
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decorators/body/" class="md-nav__link">
+        Body
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decorators/form/" class="md-nav__link">
+        Form
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decorators/auth/" class="md-nav__link">
+        Auth
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decorators/response/" class="md-nav__link">
+        Response
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decorators/bp_map/" class="md-nav__link">
+        Blueprint Map
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../response/" class="md-nav__link">
+        Response
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tag/" class="md-nav__link">
+        Tag
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../files/" class="md-nav__link">
+        Upload files
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openapi/" class="md-nav__link">
+        OpenAPI
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../function_based_view/" class="md-nav__link">
+        Function Based View
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10" type="checkbox" id="__nav_10" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10">
+          API Reference
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="API Reference" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          API Reference
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Core
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Core
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#flask_restapi.core.Api" class="md-nav__link">
+    Api
+  </a>
+  
+    <nav class="md-nav" aria-label="Api">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flask_restapi.core.Api.auth" class="md-nav__link">
+    auth()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flask_restapi.core.Api.body" class="md-nav__link">
+    body()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flask_restapi.core.Api.bp_map" class="md-nav__link">
+    bp_map()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flask_restapi.core.Api.form" class="md-nav__link">
+    form()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flask_restapi.core.Api.header" class="md-nav__link">
+    header()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flask_restapi.core.Api.path" class="md-nav__link">
+    path()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flask_restapi.core.Api.query" class="md-nav__link">
+    query()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flask_restapi.core.Api.response" class="md-nav__link">
+    response()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exceptions/" class="md-nav__link">
+        Exceptions
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#flask_restapi.core.Api" class="md-nav__link">
+    Api
+  </a>
+  
+    <nav class="md-nav" aria-label="Api">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flask_restapi.core.Api.auth" class="md-nav__link">
+    auth()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flask_restapi.core.Api.body" class="md-nav__link">
+    body()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flask_restapi.core.Api.bp_map" class="md-nav__link">
+    bp_map()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flask_restapi.core.Api.form" class="md-nav__link">
+    form()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flask_restapi.core.Api.header" class="md-nav__link">
+    header()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flask_restapi.core.Api.path" class="md-nav__link">
+    path()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flask_restapi.core.Api.query" class="md-nav__link">
+    query()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flask_restapi.core.Api.response" class="md-nav__link">
+    response()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+  <a href="https://github.com/JonarsLi/flask-restapi/edit/master/docs/api/core.md" title="Edit this page" class="md-content__button md-icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+
+  <h1>Core</h1>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="flask_restapi.core.Api" class="doc doc-heading">
+        <code>
+flask_restapi.core.Api            (<span title="flask_restapi.mixins.SpecMixin">SpecMixin</span>, <span title="flask_restapi.mixins.AuthMixin">AuthMixin</span>, <span title="flask_restapi.mixins.HandlerMixin">HandlerMixin</span>)
+        </code>
+
+
+
+<a href="#flask_restapi.core.Api" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents first">
+
+
+        <details class="quote">
+          <summary>Source code in <code>flask_restapi/core.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Api</span><span class="p">(</span><span class="n">SpecMixin</span><span class="p">,</span> <span class="n">AuthMixin</span><span class="p">,</span> <span class="n">HandlerMixin</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">:</span> <span class="n">Flask</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spec</span> <span class="o">=</span> <span class="n">Spec</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span> <span class="o">=</span> <span class="n">app</span>
+        <span class="k">if</span> <span class="n">app</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">init_app</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">init_app</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">:</span> <span class="n">Flask</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span> <span class="o">=</span> <span class="n">app</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">init_app</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">before_first_request</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_register_spec</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">app_context</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_register_blueprint</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_register_handlers</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">cli</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">commands</span><span class="o">.</span><span class="n">api_cli</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">bp_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blueprint_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">endpoint_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Bind the URL endpoint to the blueprint name.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            blueprint_name (str, optional): Flask blueprint name. Defaults to None.</span>
+<span class="sd">            endpoint_name (str, optional): Flask url endpoint name. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+            <span class="n">blueprint_map</span> <span class="o">=</span> <span class="n">BlueprintMap</span><span class="p">(</span>
+                <span class="n">endpoint_name</span><span class="o">=</span><span class="n">endpoint_name</span> <span class="ow">or</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">blueprint_name</span><span class="o">=</span><span class="n">blueprint_name</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">blueprint_maps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">blueprint_map</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="bp">cls</span>
+
+        <span class="k">return</span> <span class="n">decorator</span>
+
+    <span class="k">def</span> <span class="nf">header</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">schema</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">],</span>
+        <span class="n">endpoint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">TagModel</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">summary</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Receive request url path.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            schema (Type[BaseModel]): Models are classes which inherit from `BaseModel`.</span>
+<span class="sd">            endpoint (str, optional): Flask url endpoint name. Defaults to None.</span>
+<span class="sd">            method_name (str, optional): Endpoint method name. Defaults to None.</span>
+<span class="sd">            tag (Type[TagModel], optional): List of tags to each API operation. Defaults to None.</span>
+<span class="sd">            summary (str, optional): Override spec summary. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+            <span class="n">ep</span> <span class="o">=</span> <span class="n">endpoint</span> <span class="k">if</span> <span class="n">endpoint</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_endpoint</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">)</span>
+            <span class="n">_method_name</span> <span class="o">=</span> <span class="n">method_name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="n">_summary</span> <span class="o">=</span> <span class="n">summary</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">or</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">store_parameters</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">ep</span><span class="p">,</span> <span class="n">_method_name</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">_summary</span><span class="p">)</span>
+
+            <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+            <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">func_self</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_request_parameters</span><span class="p">()</span>
+                <span class="n">_headers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">schema</span><span class="p">(</span><span class="o">**</span><span class="n">_headers</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">current_app</span><span class="o">.</span><span class="n">ensure_sync</span><span class="p">(</span><span class="n">func</span><span class="p">)(</span><span class="n">func_self</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">wrapper</span>
+
+        <span class="k">return</span> <span class="n">decorator</span>
+
+    <span class="k">def</span> <span class="nf">path</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">schema</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">],</span>
+        <span class="n">endpoint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">TagModel</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">summary</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Receive request url path</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            schema (Type[BaseModel]): Models are classes which inherit from `BaseModel`.</span>
+<span class="sd">            endpoint (str, optional): Flask url endpoint name. Defaults to None.</span>
+<span class="sd">            method_name (str, optional): Endpoint method name. Defaults to None.</span>
+<span class="sd">            tag (Type[TagModel], optional): List of tags to each API operation. Defaults to None.</span>
+<span class="sd">            summary (str, optional): Override spec summary. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+            <span class="n">ep</span> <span class="o">=</span> <span class="n">endpoint</span> <span class="k">if</span> <span class="n">endpoint</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_endpoint</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">)</span>
+            <span class="n">_method_name</span> <span class="o">=</span> <span class="n">method_name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="n">_summary</span> <span class="o">=</span> <span class="n">summary</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">or</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">store_parameters</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">ep</span><span class="p">,</span> <span class="n">_method_name</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">_summary</span><span class="p">)</span>
+
+            <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+            <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">func_self</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_request_parameters</span><span class="p">()</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">schema</span><span class="p">(</span><span class="o">**</span><span class="n">request</span><span class="o">.</span><span class="n">view_args</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">current_app</span><span class="o">.</span><span class="n">ensure_sync</span><span class="p">(</span><span class="n">func</span><span class="p">)(</span><span class="n">func_self</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">wrapper</span>
+
+        <span class="k">return</span> <span class="n">decorator</span>
+
+    <span class="k">def</span> <span class="nf">query</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">schema</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">],</span>
+        <span class="n">endpoint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">TagModel</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">summary</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Receive request query string.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            schema (Type[BaseModel]): Models are classes which inherit from `BaseModel`.</span>
+<span class="sd">            endpoint (str, optional): Flask url endpoint name. Defaults to None.</span>
+<span class="sd">            method_name (str, optional): Endpoint method name. Defaults to None.</span>
+<span class="sd">            tag (Type[TagModel], optional): List of tags to each API operation. Defaults to None.</span>
+<span class="sd">            summary (str, optional): Override spec summary. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+            <span class="n">ep</span> <span class="o">=</span> <span class="n">endpoint</span> <span class="k">if</span> <span class="n">endpoint</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_endpoint</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">)</span>
+            <span class="n">_method_name</span> <span class="o">=</span> <span class="n">method_name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="n">_summary</span> <span class="o">=</span> <span class="n">summary</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">or</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">store_parameters</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">ep</span><span class="p">,</span> <span class="n">_method_name</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">_summary</span><span class="p">)</span>
+
+            <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+            <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">func_self</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_request_parameters</span><span class="p">()</span>
+                <span class="n">req_args</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">flat</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">normalize_query</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">req_args</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">normalize_query</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">key</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">normalize_query</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">key</span><span class="p">:</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]})</span>
+
+                <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="n">schema</span><span class="p">(</span><span class="o">**</span><span class="n">normalize_query</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">current_app</span><span class="o">.</span><span class="n">ensure_sync</span><span class="p">(</span><span class="n">func</span><span class="p">)(</span><span class="n">func_self</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">wrapper</span>
+
+        <span class="k">return</span> <span class="n">decorator</span>
+
+    <span class="k">def</span> <span class="nf">body</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">schema</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">],</span>
+        <span class="n">endpoint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">content_type</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;application/json&quot;</span><span class="p">],</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">TagModel</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">summary</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Receive request body.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            schema (Type[BaseModel]): Models are classes which inherit from `BaseModel`.</span>
+<span class="sd">            endpoint (str, optional): Flask url endpoint name. Defaults to None.</span>
+<span class="sd">            method_name (str, optional): Endpoint method name. Defaults to None.</span>
+<span class="sd">            content_type (list, optional): HTTP content-type. Defaults to &quot;application/json&quot;.</span>
+<span class="sd">            tag (Type[TagModel], optional): List of tags to each API operation. Defaults to None.</span>
+<span class="sd">            summary (str, optional): Override spec summary. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+            <span class="n">ep</span> <span class="o">=</span> <span class="n">endpoint</span> <span class="k">if</span> <span class="n">endpoint</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_endpoint</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">)</span>
+            <span class="n">_method_name</span> <span class="o">=</span> <span class="n">method_name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="n">_summary</span> <span class="o">=</span> <span class="n">summary</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">or</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">store_body</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">ep</span><span class="p">,</span> <span class="n">_method_name</span><span class="p">,</span> <span class="n">content_type</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">_summary</span><span class="p">)</span>
+
+            <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+            <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">func_self</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_request_parameters</span><span class="p">()</span>
+                <span class="n">body</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">()</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">schema</span><span class="p">(</span><span class="o">**</span><span class="n">body</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">current_app</span><span class="o">.</span><span class="n">ensure_sync</span><span class="p">(</span><span class="n">func</span><span class="p">)(</span><span class="n">func_self</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">wrapper</span>
+
+        <span class="k">return</span> <span class="n">decorator</span>
+
+    <span class="k">def</span> <span class="nf">form</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">schema</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">],</span>
+        <span class="n">endpoint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">content_type</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;multipart/form-data&quot;</span><span class="p">],</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">TagModel</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">summary</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Receive request form data.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            schema (Type[BaseModel]): Models are classes which inherit from `BaseModel`.</span>
+<span class="sd">            endpoint (str, optional): Flask url endpoint name. Defaults to None.</span>
+<span class="sd">            method_name (str, optional): Endpoint method name. Defaults to None.</span>
+<span class="sd">            content_type (list, optional): HTTP content-type]. Defaults to &quot;application/json&quot;.</span>
+<span class="sd">            tag (Type[TagModel], optional): List of tags to each API operation. Defaults to None.</span>
+<span class="sd">            summary (str, optional): Override spec summary. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+            <span class="n">ep</span> <span class="o">=</span> <span class="n">endpoint</span> <span class="k">if</span> <span class="n">endpoint</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_endpoint</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">)</span>
+            <span class="n">_method_name</span> <span class="o">=</span> <span class="n">method_name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="n">_summary</span> <span class="o">=</span> <span class="n">summary</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">or</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">store_body</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">ep</span><span class="p">,</span> <span class="n">_method_name</span><span class="p">,</span> <span class="n">content_type</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">_summary</span><span class="p">)</span>
+
+            <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+            <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">func_self</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_request_parameters</span><span class="p">()</span>
+                <span class="n">_form</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">to_dict</span><span class="p">():</span>
+                    <span class="n">_form</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+
+                <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">to_dict</span><span class="p">():</span>
+                    <span class="n">_form</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+
+                <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">form</span> <span class="o">=</span> <span class="n">schema</span><span class="p">(</span><span class="o">**</span><span class="n">_form</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">current_app</span><span class="o">.</span><span class="n">ensure_sync</span><span class="p">(</span><span class="n">func</span><span class="p">)(</span><span class="n">func_self</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">wrapper</span>
+
+        <span class="k">return</span> <span class="n">decorator</span>
+
+    <span class="k">def</span> <span class="nf">auth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Receive authorization token by headers. This auth decorator will get the Authorization of Flask request.headers and mark the endpoint on the spec as requiring verification.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            endpoint (str, optional): Flask url endpoint name. Defaults to None.</span>
+<span class="sd">            method_name (str, optional): Endpoint method name. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+            <span class="n">ep</span> <span class="o">=</span> <span class="n">endpoint</span> <span class="k">if</span> <span class="n">endpoint</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_endpoint</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">)</span>
+            <span class="n">_method_name</span> <span class="o">=</span> <span class="n">method_name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">store_auth</span><span class="p">(</span><span class="n">ep</span><span class="p">,</span> <span class="n">_method_name</span><span class="p">)</span>
+
+            <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+            <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">func_self</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_request_parameters</span><span class="p">()</span>
+                <span class="n">auth_header</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Authorization&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">auth_header</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s2">&quot;Bearer&quot;</span> <span class="ow">in</span> <span class="n">auth_header</span><span class="p">:</span>
+                        <span class="n">_token</span> <span class="o">=</span> <span class="n">auth_header</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">auth</span> <span class="o">=</span> <span class="n">_token</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">auth</span> <span class="o">=</span> <span class="n">auth_header</span>
+
+                <span class="k">return</span> <span class="n">current_app</span><span class="o">.</span><span class="n">ensure_sync</span><span class="p">(</span><span class="n">func</span><span class="p">)(</span><span class="n">func_self</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">wrapper</span>
+
+        <span class="k">return</span> <span class="n">decorator</span>
+
+    <span class="k">def</span> <span class="nf">response</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">schema</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">],</span>
+        <span class="n">endpoint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">content_type</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;application/json&quot;</span><span class="p">],</span>
+        <span class="n">headers</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">code</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span>
+        <span class="n">default_validation_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Make response schema to spec document and auto converted to dictionary.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            schema (Type[BaseModel]): Models are classes which inherit from `BaseModel`.</span>
+<span class="sd">            endpoint (str, optional): Flask url endpoint name. Defaults to None.</span>
+<span class="sd">            method_name (str, optional): Endpoint method name. Defaults to None.</span>
+<span class="sd">            content_type (list, optional): HTTP content-type]. Defaults to &quot;application/json&quot;.</span>
+<span class="sd">            headers (Dict[str, Any], optional): Response additional headers. Defaults to None.</span>
+<span class="sd">            code (int, optional): HTTP status code. Defaults to 200.</span>
+<span class="sd">            default_validation_error (bool, optional): Whether to show on spec. Defaults to True.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+            <span class="n">ep</span> <span class="o">=</span> <span class="n">endpoint</span> <span class="k">if</span> <span class="n">endpoint</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_endpoint</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">)</span>
+            <span class="n">_method_name</span> <span class="o">=</span> <span class="n">method_name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">store_responses</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">ep</span><span class="p">,</span> <span class="n">_method_name</span><span class="p">,</span> <span class="n">content_type</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">default_validation_error</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">store_responses</span><span class="p">(</span><span class="mi">422</span><span class="p">,</span> <span class="n">ValidationErrorResponses</span><span class="p">,</span> <span class="n">ep</span><span class="p">,</span> <span class="n">_method_name</span><span class="p">,</span> <span class="n">content_type</span><span class="p">)</span>
+
+            <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+            <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">func_self</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_request_parameters</span><span class="p">()</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">current_app</span><span class="o">.</span><span class="n">ensure_sync</span><span class="p">(</span><span class="n">func</span><span class="p">)(</span><span class="n">func_self</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">):</span>
+                    <span class="n">response</span> <span class="o">=</span> <span class="n">make_response</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;headers&quot;</span><span class="p">}),</span> <span class="n">code</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">response</span> <span class="o">=</span> <span class="n">make_response</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">code</span><span class="p">)</span>
+
+                <span class="c1"># Add header from result</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s2">&quot;headers&quot;</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">headers</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                            <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+                <span class="c1"># Add header from decorator</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">headers</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">headers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                        <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+                <span class="k">return</span> <span class="n">response</span>
+
+            <span class="k">return</span> <span class="n">wrapper</span>
+
+        <span class="k">return</span> <span class="n">decorator</span>
+
+    <span class="k">def</span> <span class="nf">_get_request_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RequestParametersType</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;parameters&quot;</span><span class="p">):</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">RequestParametersType</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">parameters</span>
+
+    <span class="k">def</span> <span class="nf">_generate_endpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">endpoint</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+</code></pre></div>
+        </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="flask_restapi.core.Api.auth" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">auth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">method_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+
+<a href="#flask_restapi.core.Api.auth" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Receive authorization token by headers. This auth decorator will get the Authorization of Flask request.headers and mark the endpoint on the spec as requiring verification.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>endpoint</code></td>
+        <td><code>str</code></td>
+        <td><p>Flask url endpoint name. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>method_name</code></td>
+        <td><code>str</code></td>
+        <td><p>Endpoint method name. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>flask_restapi/core.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">auth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Receive authorization token by headers. This auth decorator will get the Authorization of Flask request.headers and mark the endpoint on the spec as requiring verification.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        endpoint (str, optional): Flask url endpoint name. Defaults to None.</span>
+<span class="sd">        method_name (str, optional): Endpoint method name. Defaults to None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="n">ep</span> <span class="o">=</span> <span class="n">endpoint</span> <span class="k">if</span> <span class="n">endpoint</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_endpoint</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">)</span>
+        <span class="n">_method_name</span> <span class="o">=</span> <span class="n">method_name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">store_auth</span><span class="p">(</span><span class="n">ep</span><span class="p">,</span> <span class="n">_method_name</span><span class="p">)</span>
+
+        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">func_self</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_request_parameters</span><span class="p">()</span>
+            <span class="n">auth_header</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Authorization&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">auth_header</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;Bearer&quot;</span> <span class="ow">in</span> <span class="n">auth_header</span><span class="p">:</span>
+                    <span class="n">_token</span> <span class="o">=</span> <span class="n">auth_header</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">auth</span> <span class="o">=</span> <span class="n">_token</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">auth</span> <span class="o">=</span> <span class="n">auth_header</span>
+
+            <span class="k">return</span> <span class="n">current_app</span><span class="o">.</span><span class="n">ensure_sync</span><span class="p">(</span><span class="n">func</span><span class="p">)(</span><span class="n">func_self</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">wrapper</span>
+
+    <span class="k">return</span> <span class="n">decorator</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="flask_restapi.core.Api.body" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">body</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">method_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;application/json&#39;</span><span class="p">],</span> <span class="n">tag</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">summary</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+
+<a href="#flask_restapi.core.Api.body" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Receive request body.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>schema</code></td>
+        <td><code>Type[BaseModel]</code></td>
+        <td><p>Models are classes which inherit from <code>BaseModel</code>.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>endpoint</code></td>
+        <td><code>str</code></td>
+        <td><p>Flask url endpoint name. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>method_name</code></td>
+        <td><code>str</code></td>
+        <td><p>Endpoint method name. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>content_type</code></td>
+        <td><code>list</code></td>
+        <td><p>HTTP content-type. Defaults to "application/json".</p></td>
+        <td><code>[&#39;application/json&#39;]</code></td>
+      </tr>
+      <tr>
+        <td><code>tag</code></td>
+        <td><code>Type[TagModel]</code></td>
+        <td><p>List of tags to each API operation. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>summary</code></td>
+        <td><code>str</code></td>
+        <td><p>Override spec summary. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>flask_restapi/core.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">body</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">schema</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">],</span>
+    <span class="n">endpoint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">content_type</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;application/json&quot;</span><span class="p">],</span>
+    <span class="n">tag</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">TagModel</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">summary</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Receive request body.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        schema (Type[BaseModel]): Models are classes which inherit from `BaseModel`.</span>
+<span class="sd">        endpoint (str, optional): Flask url endpoint name. Defaults to None.</span>
+<span class="sd">        method_name (str, optional): Endpoint method name. Defaults to None.</span>
+<span class="sd">        content_type (list, optional): HTTP content-type. Defaults to &quot;application/json&quot;.</span>
+<span class="sd">        tag (Type[TagModel], optional): List of tags to each API operation. Defaults to None.</span>
+<span class="sd">        summary (str, optional): Override spec summary. Defaults to None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="n">ep</span> <span class="o">=</span> <span class="n">endpoint</span> <span class="k">if</span> <span class="n">endpoint</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_endpoint</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">)</span>
+        <span class="n">_method_name</span> <span class="o">=</span> <span class="n">method_name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="n">_summary</span> <span class="o">=</span> <span class="n">summary</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">or</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">store_body</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">ep</span><span class="p">,</span> <span class="n">_method_name</span><span class="p">,</span> <span class="n">content_type</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">_summary</span><span class="p">)</span>
+
+        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">func_self</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_request_parameters</span><span class="p">()</span>
+            <span class="n">body</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">()</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">schema</span><span class="p">(</span><span class="o">**</span><span class="n">body</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">current_app</span><span class="o">.</span><span class="n">ensure_sync</span><span class="p">(</span><span class="n">func</span><span class="p">)(</span><span class="n">func_self</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">wrapper</span>
+
+    <span class="k">return</span> <span class="n">decorator</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="flask_restapi.core.Api.bp_map" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">bp_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blueprint_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">endpoint_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+
+<a href="#flask_restapi.core.Api.bp_map" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Bind the URL endpoint to the blueprint name.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>blueprint_name</code></td>
+        <td><code>str</code></td>
+        <td><p>Flask blueprint name. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>endpoint_name</code></td>
+        <td><code>str</code></td>
+        <td><p>Flask url endpoint name. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>flask_restapi/core.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">bp_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blueprint_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">endpoint_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Bind the URL endpoint to the blueprint name.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        blueprint_name (str, optional): Flask blueprint name. Defaults to None.</span>
+<span class="sd">        endpoint_name (str, optional): Flask url endpoint name. Defaults to None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="n">blueprint_map</span> <span class="o">=</span> <span class="n">BlueprintMap</span><span class="p">(</span>
+            <span class="n">endpoint_name</span><span class="o">=</span><span class="n">endpoint_name</span> <span class="ow">or</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">blueprint_name</span><span class="o">=</span><span class="n">blueprint_name</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">blueprint_maps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">blueprint_map</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">cls</span>
+
+    <span class="k">return</span> <span class="n">decorator</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="flask_restapi.core.Api.form" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">form</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">method_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;multipart/form-data&#39;</span><span class="p">],</span> <span class="n">tag</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">summary</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+
+<a href="#flask_restapi.core.Api.form" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Receive request form data.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>schema</code></td>
+        <td><code>Type[BaseModel]</code></td>
+        <td><p>Models are classes which inherit from <code>BaseModel</code>.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>endpoint</code></td>
+        <td><code>str</code></td>
+        <td><p>Flask url endpoint name. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>method_name</code></td>
+        <td><code>str</code></td>
+        <td><p>Endpoint method name. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>content_type</code></td>
+        <td><code>list</code></td>
+        <td><p>HTTP content-type]. Defaults to "application/json".</p></td>
+        <td><code>[&#39;multipart/form-data&#39;]</code></td>
+      </tr>
+      <tr>
+        <td><code>tag</code></td>
+        <td><code>Type[TagModel]</code></td>
+        <td><p>List of tags to each API operation. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>summary</code></td>
+        <td><code>str</code></td>
+        <td><p>Override spec summary. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>flask_restapi/core.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">form</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">schema</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">],</span>
+    <span class="n">endpoint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">content_type</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;multipart/form-data&quot;</span><span class="p">],</span>
+    <span class="n">tag</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">TagModel</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">summary</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Receive request form data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        schema (Type[BaseModel]): Models are classes which inherit from `BaseModel`.</span>
+<span class="sd">        endpoint (str, optional): Flask url endpoint name. Defaults to None.</span>
+<span class="sd">        method_name (str, optional): Endpoint method name. Defaults to None.</span>
+<span class="sd">        content_type (list, optional): HTTP content-type]. Defaults to &quot;application/json&quot;.</span>
+<span class="sd">        tag (Type[TagModel], optional): List of tags to each API operation. Defaults to None.</span>
+<span class="sd">        summary (str, optional): Override spec summary. Defaults to None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="n">ep</span> <span class="o">=</span> <span class="n">endpoint</span> <span class="k">if</span> <span class="n">endpoint</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_endpoint</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">)</span>
+        <span class="n">_method_name</span> <span class="o">=</span> <span class="n">method_name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="n">_summary</span> <span class="o">=</span> <span class="n">summary</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">or</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">store_body</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">ep</span><span class="p">,</span> <span class="n">_method_name</span><span class="p">,</span> <span class="n">content_type</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">_summary</span><span class="p">)</span>
+
+        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">func_self</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_request_parameters</span><span class="p">()</span>
+            <span class="n">_form</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">to_dict</span><span class="p">():</span>
+                <span class="n">_form</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">to_dict</span><span class="p">():</span>
+                <span class="n">_form</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+
+            <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">form</span> <span class="o">=</span> <span class="n">schema</span><span class="p">(</span><span class="o">**</span><span class="n">_form</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">current_app</span><span class="o">.</span><span class="n">ensure_sync</span><span class="p">(</span><span class="n">func</span><span class="p">)(</span><span class="n">func_self</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">wrapper</span>
+
+    <span class="k">return</span> <span class="n">decorator</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="flask_restapi.core.Api.header" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">method_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">summary</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+
+<a href="#flask_restapi.core.Api.header" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Receive request url path.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>schema</code></td>
+        <td><code>Type[BaseModel]</code></td>
+        <td><p>Models are classes which inherit from <code>BaseModel</code>.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>endpoint</code></td>
+        <td><code>str</code></td>
+        <td><p>Flask url endpoint name. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>method_name</code></td>
+        <td><code>str</code></td>
+        <td><p>Endpoint method name. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>tag</code></td>
+        <td><code>Type[TagModel]</code></td>
+        <td><p>List of tags to each API operation. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>summary</code></td>
+        <td><code>str</code></td>
+        <td><p>Override spec summary. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>flask_restapi/core.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">header</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">schema</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">],</span>
+    <span class="n">endpoint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">tag</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">TagModel</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">summary</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Receive request url path.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        schema (Type[BaseModel]): Models are classes which inherit from `BaseModel`.</span>
+<span class="sd">        endpoint (str, optional): Flask url endpoint name. Defaults to None.</span>
+<span class="sd">        method_name (str, optional): Endpoint method name. Defaults to None.</span>
+<span class="sd">        tag (Type[TagModel], optional): List of tags to each API operation. Defaults to None.</span>
+<span class="sd">        summary (str, optional): Override spec summary. Defaults to None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="n">ep</span> <span class="o">=</span> <span class="n">endpoint</span> <span class="k">if</span> <span class="n">endpoint</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_endpoint</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">)</span>
+        <span class="n">_method_name</span> <span class="o">=</span> <span class="n">method_name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="n">_summary</span> <span class="o">=</span> <span class="n">summary</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">or</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">store_parameters</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">ep</span><span class="p">,</span> <span class="n">_method_name</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">_summary</span><span class="p">)</span>
+
+        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">func_self</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_request_parameters</span><span class="p">()</span>
+            <span class="n">_headers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">schema</span><span class="p">(</span><span class="o">**</span><span class="n">_headers</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">current_app</span><span class="o">.</span><span class="n">ensure_sync</span><span class="p">(</span><span class="n">func</span><span class="p">)(</span><span class="n">func_self</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">wrapper</span>
+
+    <span class="k">return</span> <span class="n">decorator</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="flask_restapi.core.Api.path" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">method_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">summary</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+
+<a href="#flask_restapi.core.Api.path" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Receive request url path</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>schema</code></td>
+        <td><code>Type[BaseModel]</code></td>
+        <td><p>Models are classes which inherit from <code>BaseModel</code>.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>endpoint</code></td>
+        <td><code>str</code></td>
+        <td><p>Flask url endpoint name. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>method_name</code></td>
+        <td><code>str</code></td>
+        <td><p>Endpoint method name. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>tag</code></td>
+        <td><code>Type[TagModel]</code></td>
+        <td><p>List of tags to each API operation. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>summary</code></td>
+        <td><code>str</code></td>
+        <td><p>Override spec summary. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>flask_restapi/core.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">path</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">schema</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">],</span>
+    <span class="n">endpoint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">tag</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">TagModel</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">summary</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Receive request url path</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        schema (Type[BaseModel]): Models are classes which inherit from `BaseModel`.</span>
+<span class="sd">        endpoint (str, optional): Flask url endpoint name. Defaults to None.</span>
+<span class="sd">        method_name (str, optional): Endpoint method name. Defaults to None.</span>
+<span class="sd">        tag (Type[TagModel], optional): List of tags to each API operation. Defaults to None.</span>
+<span class="sd">        summary (str, optional): Override spec summary. Defaults to None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="n">ep</span> <span class="o">=</span> <span class="n">endpoint</span> <span class="k">if</span> <span class="n">endpoint</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_endpoint</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">)</span>
+        <span class="n">_method_name</span> <span class="o">=</span> <span class="n">method_name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="n">_summary</span> <span class="o">=</span> <span class="n">summary</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">or</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">store_parameters</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">ep</span><span class="p">,</span> <span class="n">_method_name</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">_summary</span><span class="p">)</span>
+
+        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">func_self</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_request_parameters</span><span class="p">()</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">schema</span><span class="p">(</span><span class="o">**</span><span class="n">request</span><span class="o">.</span><span class="n">view_args</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">current_app</span><span class="o">.</span><span class="n">ensure_sync</span><span class="p">(</span><span class="n">func</span><span class="p">)(</span><span class="n">func_self</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">wrapper</span>
+
+    <span class="k">return</span> <span class="n">decorator</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="flask_restapi.core.Api.query" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">method_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">summary</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+
+<a href="#flask_restapi.core.Api.query" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Receive request query string.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>schema</code></td>
+        <td><code>Type[BaseModel]</code></td>
+        <td><p>Models are classes which inherit from <code>BaseModel</code>.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>endpoint</code></td>
+        <td><code>str</code></td>
+        <td><p>Flask url endpoint name. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>method_name</code></td>
+        <td><code>str</code></td>
+        <td><p>Endpoint method name. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>tag</code></td>
+        <td><code>Type[TagModel]</code></td>
+        <td><p>List of tags to each API operation. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>summary</code></td>
+        <td><code>str</code></td>
+        <td><p>Override spec summary. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>flask_restapi/core.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">query</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">schema</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">],</span>
+    <span class="n">endpoint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">tag</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">TagModel</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">summary</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Receive request query string.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        schema (Type[BaseModel]): Models are classes which inherit from `BaseModel`.</span>
+<span class="sd">        endpoint (str, optional): Flask url endpoint name. Defaults to None.</span>
+<span class="sd">        method_name (str, optional): Endpoint method name. Defaults to None.</span>
+<span class="sd">        tag (Type[TagModel], optional): List of tags to each API operation. Defaults to None.</span>
+<span class="sd">        summary (str, optional): Override spec summary. Defaults to None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="n">ep</span> <span class="o">=</span> <span class="n">endpoint</span> <span class="k">if</span> <span class="n">endpoint</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_endpoint</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">)</span>
+        <span class="n">_method_name</span> <span class="o">=</span> <span class="n">method_name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="n">_summary</span> <span class="o">=</span> <span class="n">summary</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">or</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">store_parameters</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">ep</span><span class="p">,</span> <span class="n">_method_name</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">_summary</span><span class="p">)</span>
+
+        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">func_self</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_request_parameters</span><span class="p">()</span>
+            <span class="n">req_args</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">flat</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">normalize_query</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">req_args</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">normalize_query</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">key</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">normalize_query</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">key</span><span class="p">:</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]})</span>
+
+            <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="n">schema</span><span class="p">(</span><span class="o">**</span><span class="n">normalize_query</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">current_app</span><span class="o">.</span><span class="n">ensure_sync</span><span class="p">(</span><span class="n">func</span><span class="p">)(</span><span class="n">func_self</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">wrapper</span>
+
+    <span class="k">return</span> <span class="n">decorator</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="flask_restapi.core.Api.response" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">method_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;application/json&#39;</span><span class="p">],</span> <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">default_validation_error</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
+
+
+<a href="#flask_restapi.core.Api.response" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Make response schema to spec document and auto converted to dictionary.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>schema</code></td>
+        <td><code>Type[BaseModel]</code></td>
+        <td><p>Models are classes which inherit from <code>BaseModel</code>.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>endpoint</code></td>
+        <td><code>str</code></td>
+        <td><p>Flask url endpoint name. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>method_name</code></td>
+        <td><code>str</code></td>
+        <td><p>Endpoint method name. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>content_type</code></td>
+        <td><code>list</code></td>
+        <td><p>HTTP content-type]. Defaults to "application/json".</p></td>
+        <td><code>[&#39;application/json&#39;]</code></td>
+      </tr>
+      <tr>
+        <td><code>headers</code></td>
+        <td><code>Dict[str, Any]</code></td>
+        <td><p>Response additional headers. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>code</code></td>
+        <td><code>int</code></td>
+        <td><p>HTTP status code. Defaults to 200.</p></td>
+        <td><code>200</code></td>
+      </tr>
+      <tr>
+        <td><code>default_validation_error</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether to show on spec. Defaults to True.</p></td>
+        <td><code>True</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>flask_restapi/core.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">response</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">schema</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">],</span>
+    <span class="n">endpoint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">content_type</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;application/json&quot;</span><span class="p">],</span>
+    <span class="n">headers</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">code</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span>
+    <span class="n">default_validation_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Make response schema to spec document and auto converted to dictionary.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        schema (Type[BaseModel]): Models are classes which inherit from `BaseModel`.</span>
+<span class="sd">        endpoint (str, optional): Flask url endpoint name. Defaults to None.</span>
+<span class="sd">        method_name (str, optional): Endpoint method name. Defaults to None.</span>
+<span class="sd">        content_type (list, optional): HTTP content-type]. Defaults to &quot;application/json&quot;.</span>
+<span class="sd">        headers (Dict[str, Any], optional): Response additional headers. Defaults to None.</span>
+<span class="sd">        code (int, optional): HTTP status code. Defaults to 200.</span>
+<span class="sd">        default_validation_error (bool, optional): Whether to show on spec. Defaults to True.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="n">ep</span> <span class="o">=</span> <span class="n">endpoint</span> <span class="k">if</span> <span class="n">endpoint</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_endpoint</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">)</span>
+        <span class="n">_method_name</span> <span class="o">=</span> <span class="n">method_name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">store_responses</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">ep</span><span class="p">,</span> <span class="n">_method_name</span><span class="p">,</span> <span class="n">content_type</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">default_validation_error</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">store_responses</span><span class="p">(</span><span class="mi">422</span><span class="p">,</span> <span class="n">ValidationErrorResponses</span><span class="p">,</span> <span class="n">ep</span><span class="p">,</span> <span class="n">_method_name</span><span class="p">,</span> <span class="n">content_type</span><span class="p">)</span>
+
+        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">func_self</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_request_parameters</span><span class="p">()</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">current_app</span><span class="o">.</span><span class="n">ensure_sync</span><span class="p">(</span><span class="n">func</span><span class="p">)(</span><span class="n">func_self</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">):</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">make_response</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;headers&quot;</span><span class="p">}),</span> <span class="n">code</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">make_response</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">code</span><span class="p">)</span>
+
+            <span class="c1"># Add header from result</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s2">&quot;headers&quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">headers</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                        <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+            <span class="c1"># Add header from decorator</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">headers</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">headers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+            <span class="k">return</span> <span class="n">response</span>
+
+        <span class="k">return</span> <span class="n">wrapper</span>
+
+    <span class="k">return</span> <span class="n">decorator</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../../function_based_view/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Function Based View" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Function Based View
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../exceptions/" class="md-footer__link md-footer__link--next" aria-label="Next: Exceptions" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Exceptions
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2a1c317c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.a6c66575.min.js"></script>
+      
+    
+  </body>
+</html>
